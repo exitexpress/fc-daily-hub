@@ -295,32 +295,37 @@ const C = {
 
   // ── DAILY STEPS ──────────────────────────────────────────
   morningSteps: [
-    { id:'m1', title:'Sweep all client channels', sub:'Every builtforyou- and brandbuild- channel. Read everything. Triage as Fire / Urgent / Secondary. Nothing gets missed.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
-    { id:'m2', title:'Check Slack sections — approvals + new onboards', sub:'Channels: new client just onboarded? Send post-onboarding checklist. Product Review / Brand Review: any client replied with approval? Go into builder → advance stage → move channel.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
-    { id:'m3', title:'Check team channels', sub:'#team-live: Louie\'s ROAS — Cat 4 flags, below BER, rebrief requests. #team-brandbuilds-eod: what the team did yesterday. #team-build + #team-setup: any stage overdue or untagged?', link:{ label:'Open team-live', url:'https://freedomclub-clients.slack.com/archives/C0B2CL43N73' } },
-    { id:'m4', title:'Work the FC Builder — advance setup clients', sub:'Log in. Move each client forward one step. Product selection → send template → move to Product Review. Brand done → send template → move to Brand Review. One client at a time.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
-    { id:'m5', title:'Draft + send morning summary to Abe', sub:'Use Chat tab for all drafts — nothing goes to a client without his approval. Morning summary shortcut → paste your sweep notes → copy → WhatsApp Abe. By 4:45pm: prep Austin sync notes.', link:null },
+    { id:'m1', title:'Sweep all client channels', sub:'Every builtforyou- and brandbuild- channel. Read everything. Triage as Fire / Urgent / Secondary. Flag anything that needs Abe before you draft a reply.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
+    { id:'m2', title:'Check approvals — fire build triggers', sub:'Product Review / Brand Review sections: any client replied with approval? Go into Builder → advance stage → move channel → fire every trigger for that stage (see Pipeline tab). New onboard? Verify Sheila\'s checklist is in progress.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
+    { id:'m3', title:'Check team channels — build progress + live performance', sub:'#team-build Canvas: any track at "done" with no handoff? Chase it. Sheila hit 50% wordings? Tag Marinel. AI content 100%? Tag Sam. #team-live Canvas: Louie\'s batch results — Cat 4 flags, below BER, rebrief needed. #team-brandbuilds-eod: hours submitted?', link:{ label:'Open team-build', url:'https://freedomclub-clients.slack.com/archives/C0BK8964HMW' } },
+    { id:'m4', title:'Work the FC Builder — advance setup clients', sub:'Log in. For each client in setup: move one step forward. Product done → send builder template → move to Product Review → fire all 4 build triggers. Brand done → send template → move to Brand Review → remind skeletal to apply branding. Use Chat → "Kick off build" shortcut to draft all team messages at once.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
+    { id:'m5', title:'Draft + send morning summary to Abe', sub:'Chat tab → Morning summary shortcut → paste sweep notes → get clean 8-bullet WhatsApp message → copy → send to Abe. Nothing goes to a client without his approval. By 4:45pm: all flagged items + drafts ready for the Austin sync.', link:null },
   ],
 
   // ── CHAT SHORTCUTS ───────────────────────────────────────
   shortcuts: [
-    { label:'Draft client message', prompt:'Draft a reply for [Client Name] in [channel name].\n\nWhat they said: "[paste their message]"\nPipeline stage: [stage]\nContext: [any relevant history]' },
-    { label:'Builder help',         prompt:'I\'m working in the FC Builder on the [step name] stage for client [Name].\n\nSituation: [describe what you\'re looking at or stuck on]\n\nWhat should I do here?' },
-    { label:'Write ad brief',       prompt:'Write 3 video ad scripts for [Brand]  [Client Name].\n\nGet this info from the #team-live Canvas before filling in:\n\nBatch: [X] (next batch number)\nControl creative: [CX  describe the angle that performed best]\nLast ROAS: [X.XX] | BER: [X.XX] | Total spend to date: $[X]\nBest hook rate: [X%] on [CX]\nWhat worked: [hook style, angle, messaging that got engagement/ATCs]\nWhat failed: [angles that had low hook rate or zero ATCs]\n\nProduct: [product name  what it does, who it helps]\nShopify store: [URL]\nTarget customer: [who buys this]\n\nFocus for this batch: [e.g. "buying intent hooks  last batch had clicks but no purchases" OR "iterate C2 angle with stronger CTA" OR "new UGC-style angle"]\n\nRules:\n- Ad 1 must mirror the control creative (same angle, tighter execution)\n- All scripts are video only (no static)\n- Hook must be in first 3 seconds\n- No vague lifestyle openers  lead with the problem or result\n- Keep scripts under 45 seconds\n- End with clear CTA (site link or "link in bio")' },
-    { label:'Morning summary',      prompt:'Format my sweep notes as a WhatsApp summary for Abe — 5-10 bullets, direct.\n\nMy notes:\n[paste notes here]' },
-    { label:'Escalation check',     prompt:'Client [Name]: [describe situation]. Should I handle, draft for Abe to approve, or escalate to Austin/Will?' },
-    { label:'Team task',            prompt:'Draft a Slack message assigning a task to [team member]. Task: [describe]. Client: [name]. Deadline: [date].' },
+    { label:'Draft client message',   prompt:'Draft a reply for [Client Name] in [channel name].\n\nWhat they said: "[paste their message]"\nPipeline stage: [stage]\nContext: [any relevant history]\n\nTone: direct, warm, no filler. Keep it short.' },
+    { label:'Builder help',           prompt:'I\'m in the FC Builder on the [step name] stage for client [Name].\n\nSituation: [describe what I\'m looking at or stuck on]\n\nWhat should I do here?' },
+    { label:'Write ad brief',         prompt:'Write 3 video ad scripts for [Brand] — [Client Name].\n\nGet this from the #team-live Canvas before filling in:\nBatch: [X]\nControl creative: [CX — describe the angle]\nLast ROAS: [X.XX] | BER: [X.XX] | Total spend: $[X]\nBest hook rate: [X%] on [CX]\nWhat worked: [hooks/angles that got engagement or ATCs]\nWhat failed: [angles with low hook rate or zero ATCs]\n\nProduct: [what it does, who it helps]\nShopify store: [URL]\nTarget customer: [who buys this]\nFocus for this batch: [buying intent hooks / iterate control angle / new UGC angle]\n\nRules:\n- Ad 1 mirrors the control creative (same angle, tighter execution)\n- Video only — no static\n- Hook in first 3 seconds\n- Lead with the problem or result — no vague lifestyle openers\n- Under 45 seconds\n- End with clear CTA' },
+    { label:'Kick off build',         prompt:'Client [Name] ([Brand]) just approved their [product / branding].\n\nDraft these Slack messages:\n\n1. To Neil / Eliza / Kelvin (#team-build): start skeletal store layout + reviews. Store progress → 50%.\n2. To Sheila: start product naming + wordings for [Brand].\n3. To April + Paul (AI Content): they can start now. Product details: [paste info]\n4. [Brand approval only]: To skeletal — apply the approved branding to the store now.\n\nKeep each message short — who, what, client name.' },
+    { label:'QC store feedback',      prompt:'I need to send store QC feedback for [Client Name / Brand].\n\nAbe\'s feedback:\n[paste exactly what Abe said]\n\nDraft a Slack message for their build channel ([channel name]) listing what needs fixing — specific page, section, what to change. Number each item. Be precise.' },
+    { label:'Launch prep message',    prompt:'Draft a message to [Client Name] in [channel name].\n\nContext: store and ads are approved. We need to book a launch call with Abe.\n\nInclude:\n- We\'re ready to go\n- Book a time here: [paste Amy\'s calendar link from Links tab]\n- Friendly and direct — no fluff.' },
+    { label:'Morning summary',        prompt:'Format my sweep notes as a WhatsApp message for Abe — max 8 bullets, direct. No filler.\n\nMy notes:\n[paste notes here]' },
+    { label:'Escalation check',       prompt:'Client [Name]: [describe situation in one sentence]. Should I handle this, draft for Abe to approve, or escalate to Austin/Will? Clear answer only.' },
+    { label:'Team task',              prompt:'Draft a Slack message to [team member].\nTask: [exactly what needs doing]\nClient: [name / brand]\nDeadline: [date or timeframe]\nShort — what, who, when.' },
   ],
 
   // ── TEAM ─────────────────────────────────────────────────
   team: [
-    { id:'jimmy',   name:'Jimmy',              role:'Client comms · onboarding' },
-    { id:'shiela',  name:'Shiela',             role:'Checklists · admin · QC' },
+    { id:'jimmy',   name:'Jimmy',              role:'Client comms · onboarding · handover' },
+    { id:'sheila',  name:'Sheila',             role:'Product naming · wordings · store coordination' },
+    { id:'neil',    name:'Neil',               role:'Skeletal store build' },
+    { id:'eliza',   name:'Eliza',              role:'Skeletal store build' },
+    { id:'kelvin',  name:'Kelvin',             role:'Skeletal store build' },
     { id:'paul',    name:'Paul',               role:'AI images · store content' },
     { id:'april',   name:'April',              role:'AI content · store copy' },
     { id:'marinel', name:'Marinel',            role:'Social media' },
     { id:'sam',     name:'Sam',                role:'Email · Klaviyo' },
-    { id:'neil',    name:'Neil & Allyzza',     role:'Skeletal store build' },
     { id:'louie',   name:'Louie',              role:'Ads · ROAS tracking' },
     { id:'bilal',   name:'Bilal',              role:'Ad account management' },
     { id:'editors', name:'Muhammad & Triyogi', role:'Video editing' },
@@ -329,15 +334,60 @@ const C = {
 
   // ── PIPELINE ─────────────────────────────────────────────
   pipeline: [
-    { stage:'1. Onboarding',          owner:'Jimmy',                        what:'Jimmy does the onboarding call, sends post-onboarding checklist in Slack. You verify the client completes it.',                   note:'Flag to Jimmy if client goes quiet on checklist.' },
-    { stage:'2. Product Research',    owner:'You (FC Builder)',              what:'Log in to the FC Builder for this client. Select products → the builder generates the review link + Slack template. Send the templated message to the client. Move their Slack channel to the "Product Review" section. Follow up at 5 days if no response.', note:'Log approval deadline in Master To-Do. Never send a custom message — use the builder template.' },
-    { stage:'3. Branding',            owner:'You (FC Builder)',              what:'Client approves product → back into builder → complete branding steps. Builder sends the branded review link + Slack template. Send it to the client. Move their channel to "Brand Review" section. Follow up at 3 days.', note:'Check post-approval checklist too — the builder sends a separate client checklist after each approval. Make sure they complete it.' },
-    { stage:'4. Store Build',         owner:'Neil → April → Sam+Marinel → Shiela', what:'Skeletal (Neil & Allyzza) → AI content + copy (April) → Email flows (Sam) + Socials (Marinel) → QC (Shiela). Coordinate every handoff.', note:"Tag the next team the moment a stage is done. Don't let anything sit." },
-    { stage:'5. Ad Briefs',           owner:'You → Muhammad & Triyogi',     what:'Start briefing while store is still in build. Video briefs only. Post Canvas in #team-ads. Ads + store should finish together.', note:'Brief early — goal is everything ready at the same time.' },
-    { stage:'6. Launch Call',         owner:'Abe + client (book via Amy)',   what:'Store + ads ready → book launch call via Amy calendar link (Ops Playbook). Abe walks client through everything. You book it.',   note:'Log call date in Master To-Do commitments.' },
-    { stage:'7. Go Live',             owner:'Louie',                        what:'After launch call, ads go live at 12AM the following day. Louie has the account built. Confirm 12AM activation is set.',         note:'Log live date in Master To-Do.' },
-    { stage:'8. Monitor + Rebrief',   owner:'Louie → You (cycle)',          what:'Louie monitors Batch 1 + provides report. You rebrief. Brief → editors → live with Louie. Repeat until 2 profitable days. By Batch 2 should be profitable — if not, flag to Abe.', note:'Chase Louie report if overdue. Watch for LP issues — flag to Abe if product page is the problem.' },
-    { stage:'9. Handover to Jimmy',   owner:'Abe → Jimmy',                  what:'2 consecutive profitable days = handover. You flag to Abe when it happens. Client moves to Jimmy — off FC active plate.',       note:'Until handover: your job is ads and product page iterations.' },
+    {
+      stage:'1. Onboarding',
+      owner:'Jimmy + Sheila (you monitor)',
+      what:'Jimmy runs the onboarding call. Sheila sends the post-onboarding checklist in Slack. Your job: verify the client completes it and follow up if they go quiet. You do not run this stage — you watch it.',
+      note:'Flag to Jimmy if client is slow or silent on checklist. Nothing moves forward until checklist is done.'
+    },
+    {
+      stage:'2. Product Selection',
+      owner:'You (FC Builder)',
+      what:'Log into FC Builder. Select the right products for this client. Builder generates review link + Slack template — send it to the client in their channel. Move their channel to "Product Review" section. Follow up at 5 days if no response.\n\n🔴 WHEN CLIENT APPROVES — fire all 4 triggers immediately:\n1. Tag skeletal (Neil / Eliza / Kelvin) to start store layout + reviews → store progress to 50%\n2. Tag Sheila to start product naming + wordings\n3. Tag AI Content team (April + Paul) — they start now\n4. Open Chat tab → Write ad brief → kick off Batch 1 brief',
+      note:'Never send a custom message — use the builder template only. Log the approval deadline.'
+    },
+    {
+      stage:'3. Branding',
+      owner:'You (FC Builder)',
+      what:'Client approves product → back into Builder → complete branding steps. Builder generates branded review link + Slack template → send to client → move channel to "Brand Review." Follow up at 3 days.\n\n🔴 WHEN CLIENT APPROVES BRANDING:\n→ Remind skeletal (Neil / Eliza / Kelvin) to apply branding to the store now.',
+      note:'Post-approval checklist: the builder sends a separate client checklist after each approval. Make sure they complete it before moving on.'
+    },
+    {
+      stage:'4. Store Build (parallel tracks)',
+      owner:'Neil/Eliza/Kelvin · Sheila · April/Paul · Marinel · Sam',
+      what:'Four tracks run simultaneously — your job is watching triggers and firing each one on time. Add client to the #team-build Canvas.\n\n📍 AT PRODUCT APPROVAL: Skeletal starts layout + reviews (→ 50%). Sheila starts naming + wordings. AI Content starts.\n📍 AT BRAND APPROVAL: Skeletal applies branding.\n📍 WORDINGS HIT 50% (Sheila): Tag Marinel for Socials — confirm social access first.\n📍 AI CONTENT AT 100%: Tag Sam to push emails to 100%.\n\nAD BRIEFS run in parallel from product approval. Chase editors if brief has no update after 48hrs.',
+      note:'Nothing sits. Track at "done" for 24hrs with no handoff = you chase it. Check #team-build every morning.'
+    },
+    {
+      stage:'5. QC + Ads Review',
+      owner:'Abe (store) · You (ads)',
+      what:'Store built and ready. Flag Abe with the live store URL. Abe gives feedback → use "QC store feedback" shortcut in Chat to turn it into a Slack message for that client's build channel → team fixes → back to Abe. Loop until Abe approves.\n\nAds: editors finish videos → you QC → if approved, pass to Louie. If changes needed, brief editors with exact fixes.\n\nBoth store AND ads approved before moving to launch prep.',
+      note:'No launch prep without Abe's store approval. Ads should be ready around the same time — brief started back at Stage 2.'
+    },
+    {
+      stage:'6. Launch Prep',
+      owner:'You + Louie',
+      what:'Store and ads both approved. Two things in parallel:\n1. Louie sets up the Meta ad campaign and loads the approved videos.\n2. You message the client: "We're all set — book your launch call here." Send Amy's calendar link (in Links tab). Confirm the date.',
+      note:'Log the confirmed call date. Do not go live before the call.'
+    },
+    {
+      stage:'7. Launch Call',
+      owner:'Abe + client',
+      what:'Abe walks the client through the store and ad plan. You book it via Amy's calendar link. Have the store URL and ad preview ready before the call.',
+      note:'Client reschedules? Update the date, notify Abe. Call must happen before go-live.'
+    },
+    {
+      stage:'8. Go Live + Monitor + Rebrief',
+      owner:'Louie · You (cycle)',
+      what:'After launch call: ads go live at 12AM the following day. Louie activates.\n\nLouie posts results in the #team-live Canvas (not PDFs). You read it → write Batch 2 brief immediately — get ahead of it, don't wait for Batch 1 to end. Brief → editors → Louie launches Batch 2.\n\nRepeat. By Batch 2: should be profitable. If not → flag Abe. Store/product/offer review is Abe's decision — not yours to fix.',
+      note:'Chase Louie if Canvas not updated. Start Batch 2 brief early — goal is Batch 2 ready before Batch 1 wraps.'
+    },
+    {
+      stage:'9. Handover to Jimmy',
+      owner:'You → Abe → Jimmy',
+      what:'2 consecutive profitable days = flag Abe immediately. Client moves to Jimmy. You are done with this client.',
+      note:'Until handover: ad cycle and LP/product page issues only. Nothing else on this client.'
+    },
   ],
 
   // ── TOOL LOGINS ──────────────────────────────────────────
@@ -384,28 +434,28 @@ const C = {
   // Team channels to monitor daily (beyond client channels)
   feeds: [
     {
-      icon:'📊', label:'#team-live', sub:'Live clients — ROAS, ad briefs, editors, launch, rebriefing',
-      url:'https://freedomclub-clients.slack.com/archives/C0B2CL43N73',
-      note:'Louie posts daily ROAS here. Check for Cat 4 flags, accounts below BER, rebrief requests. Also where you post video briefs — editors update when videos are done, Louie picks up for launch. If Louie hasn\'t posted by 6pm — chase him.',
-      format:'Expected ROAS report format:\nClient: [Brand]\nBatch: [X]\nSpend: $[X] | Revenue: $[X] | ROAS: [X]\nStatus: [On track / Below BER / Rebrief needed]\nNotes: [what\'s happening, what\'s next]',
-    },
-    {
-      icon:'📋', label:'#team-brandbuilds-eod', sub:'Daily EOD reports from the whole build team',
-      url:'https://freedomclub-clients.slack.com/archives/C0B2UJU5AU9',
-      note:'Auto-posted daily, team replies in thread. Check each morning. Flag to Abe if anyone hasn\'t submitted or if hours look off.',
-      format:'Format:\nDate\nTask — hours\nTotal hours',
-    },
-    {
-      icon:'🏗️', label:'#team-setup (Slack List)', sub:'Product + branding stage — Paul',
-      url:'https://freedomclub-clients.slack.com/archives/C0BJFSM0P3K',
-      note:'Clients in product and branding stage. You work on these in the FC Builder. When builder stages are done and client has approved → move client channel out of "Brand Review" and brief the build team.',
-      format:'List columns: Client | Builder step | Status | Notes',
-    },
-    {
-      icon:'🔨', label:'#team-build (Slack List)', sub:'Store build: skeletal → AI content → email flows → socials → QC',
+      icon:'🔨', label:'#team-build', sub:'Store build — parallel tracks, VA fires triggers',
       url:'https://freedomclub-clients.slack.com/archives/C0BK8964HMW',
-      note:'Monitor all build stage handoffs. Skeletal (Neil + Allyzza) → AI content (April + Paul) → Email flows (Sam) + Socials (Marinel) → QC (Shiela). Tag the next person the moment a stage is done. If anything has sat at "done" for 24 hours — you chase it.',
-      format:'List columns: Client | Skeletal | AI content | Email flows | Socials | QC | Notes',
+      note:'Four parallel tracks — fire each trigger at the right moment:\n\n📍 Product approval → Tag skeletal (Neil/Eliza/Kelvin) for store layout (→ 50%). Tag Sheila for naming + wordings. Tag AI Content (April/Paul) to start.\n📍 Brand approval → Remind skeletal to apply branding.\n📍 Wordings at 50% (Sheila) → Tag Marinel for Socials. Confirm social access first.\n📍 AI Content at 100% → Tag Sam to push emails.\n\nUse Chat → "Kick off build" to draft all messages at once. Check canvas every morning — anything at done with no handoff? Chase it.',
+      format:'Canvas columns: Client | Skeletal | AI Content | Wordings (Sheila) | Socials | Emails | QC ready',
+    },
+    {
+      icon:'📊', label:'#team-live', sub:'Live clients — ROAS canvas, rebrief cycle',
+      url:'https://freedomclub-clients.slack.com/archives/C0B2CL43N73',
+      note:'Louie updates the Canvas (not PDFs) with batch results. Check daily: Cat 4 flags, below BER, rebrief needed. Canvas not updated by 6pm — chase Louie.\n\nTo rebrief: Chat → Write ad brief → pull data from Canvas → post scripts here for editors. Editors update when done → Louie picks up for next batch.',
+      format:'Canvas sections: Rebrief needed | Flag Abe | Validated (handed off) | Concluded',
+    },
+    {
+      icon:'📋', label:'#team-brandbuilds-eod', sub:'Daily EOD reports from the build team',
+      url:'https://freedomclub-clients.slack.com/archives/C0B2UJU5AU9',
+      note:'Team posts daily hours and tasks here. Check each morning. Flag to Abe if anyone hasn\'t submitted or hours look off. Good way to track who worked on which client.',
+      format:'Format: Date | Task — hours | Total hours',
+    },
+    {
+      icon:'🏗️', label:'#team-setup', sub:'Product + branding stage clients',
+      url:'https://freedomclub-clients.slack.com/archives/C0BJFSM0P3K',
+      note:'Clients currently in product selection or branding stages. You manage these in the FC Builder. Client gets approval → move their channel, fire build triggers (Chat → "Kick off build"), add them to the #team-build canvas.',
+      format:'Canvas: Client | Builder step | Status | Notes',
     },
   ],
 
@@ -516,7 +566,7 @@ const C = {
         <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0"></div></div>
         <div id="cl-list"></div>
       </div>
-      <div class="lbl">Ad Briefs (Stage 5 clients)</div>
+      <div class="lbl">Ad Briefs — kick off at product approval</div>
       <div class="card" style="display:flex;align-items:center;gap:14px;background:rgba(124,111,255,.05);border-color:rgba(124,111,255,.2)">
         <div style="font-size:26px;flex-shrink:0">📋</div>
         <div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:3px">Write a video ad brief</div><div style="font-size:12px;color:var(--muted);line-height:1.5">For clients at Stage 5. Start briefing while store is still building. Video only. Post Canvas in #team-ads. Cat 4 = flag Abe first.</div></div>
