@@ -216,6 +216,34 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .login-val{flex:1;font-size:13px;color:var(--m2);background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:5px 9px;font-family:'SF Mono',monospace;letter-spacing:.3px}
 .login-val.empty{color:var(--muted);font-style:italic;font-family:inherit;letter-spacing:0}
 
+/* ── TUTORIAL TOUR ── */
+.tut-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
+.tut-overlay.hidden{display:none}
+.tut-box{background:var(--s1);border:1px solid var(--border);border-radius:16px;width:100%;max-width:520px;overflow:hidden}
+.tut-hdr{padding:16px 18px 0;display:flex;justify-content:space-between;align-items:center}
+.tut-step-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:500}
+.tut-x{background:none;border:1px solid var(--border);border-radius:8px;color:var(--m2);font-size:12px;padding:4px 10px;cursor:pointer}
+.tut-x:hover{border-color:var(--accent);color:var(--a2)}
+.tut-body{padding:20px 18px 6px}
+.tut-icon{font-size:28px;margin-bottom:10px}
+.tut-title{font-size:18px;font-weight:700;margin-bottom:9px;line-height:1.25}
+.tut-desc{font-size:13px;color:var(--m2);line-height:1.7;white-space:pre-line}
+.tut-tip{background:rgba(124,111,255,.08);border:1px solid rgba(124,111,255,.2);border-radius:8px;padding:9px 12px;margin-top:13px;font-size:12px;color:var(--m2);line-height:1.55}
+.tut-tip strong{color:var(--a2)}
+.tut-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px}
+.tut-dots{display:flex;gap:5px;flex-shrink:0;align-items:center}
+.tut-dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:background .2s;cursor:pointer}
+.tut-dot.active{background:var(--accent)}
+.tut-dot.done{background:var(--good)}
+.tut-nav{display:flex;gap:7px}
+.tut-nav button{border-radius:8px;padding:8px 15px;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.tut-back{background:var(--s2);border:1px solid var(--border);color:var(--m2)}
+.tut-back:hover{border-color:var(--accent);color:var(--a2)}
+.tut-next{background:var(--accent);border:none;color:white}
+.tut-next:hover{background:var(--a2)}
+.tut-tour-btn{font-size:12px;color:var(--m2);background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:5px 11px;cursor:pointer;transition:all .15s}
+.tut-tour-btn:hover{border-color:var(--accent);color:var(--a2)}
+
 /* ── TRIAGE ── */
 .tri{width:100%;border-collapse:collapse;font-size:12px}
 .tri th{text-align:left;padding:8px 10px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border)}
@@ -267,14 +295,11 @@ const C = {
 
   // ── DAILY STEPS ──────────────────────────────────────────
   morningSteps: [
-    { id:'m1', title:'Sweep every client channel in Slack', sub:'Every builtforyou- and brandbuild- channel. Messages, complaints, responses, anything. Every day including weekends.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
-    { id:'m2', title:'Check the "Channels" section for new onboards', sub:'Jimmy onboards clients and a new channel appears. Check if their post-onboarding checklist has been sent. If not — send it. This kicks off the product selection process in the builder.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
-    { id:'m3', title:'Check "Product Review" + "Brand Review" sections', sub:'Any client who replied with an approval? Open the builder for that client, process their approval, advance to the next stage. Then move their Slack channel to the correct section.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
-    { id:'m4', title:'Check team channels', sub:'#team-live: Louie\'s ROAS report — Cat 4 flags, accounts below BER, rebrief requests. #team-build EOD: what everyone worked on yesterday. Flag anything overdue or blocked.', link:{ label:'Open team-live', url:'https://freedomclub-clients.slack.com/archives/C0B2CL43N73' } },
-    { id:'m5', title:'Update Master To-Do + prioritise your day', sub:'Fire (Abe now) → Urgent (today) → Builder queue (active clients to advance) → Secondary. Fires at top. Builder tasks in order.', link:{ label:'Open To-Do', url:'https://freedomclub-clients.slack.com/docs/T084JU5E46N/F0BHY3YJ0MD' } },
-    { id:'m6', title:'Work through the FC Builder for active clients', sub:'Log in and move each client forward. Product selection → send review link via Slack template → move channel to "Product Review". Branding → send review link → move channel to "Brand Review". One client at a time.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
-    { id:'m7', title:'Draft urgent replies + send morning summary to Abe', sub:'Use Chat tab for client drafts — nothing goes to a client without his approval. Morning summary shortcut → paste your notes → copy → WhatsApp Abe.', link:null },
-    { id:'m8', title:'Before 4:45pm — prep Austin sync notes', sub:'Every Mon-Sat at 5pm AEST. All flagged items, escalations, anything needing a leadership call. Have drafts ready so Austin can decide and you act immediately after.', link:null },
+    { id:'m1', title:'Sweep all client channels', sub:'Every builtforyou- and brandbuild- channel. Read everything. Triage as Fire / Urgent / Secondary. Nothing gets missed.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
+    { id:'m2', title:'Check Slack sections — approvals + new onboards', sub:'Channels: new client just onboarded? Send post-onboarding checklist. Product Review / Brand Review: any client replied with approval? Go into builder → advance stage → move channel.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
+    { id:'m3', title:'Check team channels', sub:'#team-live: Louie\'s ROAS — Cat 4 flags, below BER, rebrief requests. #team-brandbuilds-eod: what the team did yesterday. #team-build + #team-setup: any stage overdue or untagged?', link:{ label:'Open team-live', url:'https://freedomclub-clients.slack.com/archives/C0B2CL43N73' } },
+    { id:'m4', title:'Work the FC Builder — advance setup clients', sub:'Log in. Move each client forward one step. Product selection → send template → move to Product Review. Brand done → send template → move to Brand Review. One client at a time.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
+    { id:'m5', title:'Draft + send morning summary to Abe', sub:'Use Chat tab for all drafts — nothing goes to a client without his approval. Morning summary shortcut → paste your sweep notes → copy → WhatsApp Abe. By 4:45pm: prep Austin sync notes.', link:null },
   ],
 
   // ── CHAT SHORTCUTS ───────────────────────────────────────
@@ -462,6 +487,7 @@ const C = {
     <div class="topbar-right">
       <div class="date-pill" id="date-pill"></div>
       <div class="training-badge" id="training-badge" style="display:none">Training Mode</div>
+      <button class="tut-tour-btn" onclick="launchTutorial(0)">? Tour</button>
       <a class="flag-btn" id="flag-btn" href="#" target="_blank">🚨 Flag Abe</a>
       <button class="logout-btn" onclick="doLogout()">Sign out</button>
     </div>
@@ -490,6 +516,12 @@ const C = {
         <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0"></div></div>
         <div id="cl-list"></div>
       </div>
+      <div class="lbl">Ad Briefs (Stage 5 clients)</div>
+      <div class="card" style="display:flex;align-items:center;gap:14px;background:rgba(124,111,255,.05);border-color:rgba(124,111,255,.2)">
+        <div style="font-size:26px;flex-shrink:0">📋</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:3px">Write a video ad brief</div><div style="font-size:12px;color:var(--muted);line-height:1.5">For clients at Stage 5. Start briefing while store is still building. Video only. Post Canvas in #team-ads. Cat 4 = flag Abe first.</div></div>
+        <button class="msg-btn approve" style="flex-shrink:0;white-space:nowrap" onclick="goToChatBrief()">Open brief →</button>
+      </div>
       <div class="lbl">Triage</div>
       <div class="card" style="padding:0;overflow:hidden">
         <table class="tri">
@@ -499,16 +531,6 @@ const C = {
           <tr><td><span class="badge b-warn">Secondary</span></td><td>No action yet but monitor</td><td>Note in Master To-Do.</td></tr>
           <tr><td><span class="badge b-good">Done</span></td><td>Already handled, nothing outstanding</td><td>Skip.</td></tr>
         </table>
-      </div>
-      <div class="lbl">WhatsApp Summary Template</div>
-      <div class="card" style="position:relative">
-        <pre id="summary-tpl" style="font-size:12px;color:var(--m2);line-height:1.7;white-space:pre-wrap;font-family:'SF Mono',monospace">Morning sweep done.
-
-- FIRE: [Client] — [situation] — draft ready for your review
-- DUE TODAY: [Client] — [what's due]
-- QUIET: [Client] — last message [X] days ago, nothing from our side
-- TEAM: [Person] — [task] — was due [date]</pre>
-        <button class="msg-btn" style="margin-top:10px" onclick="copyText(document.getElementById('summary-tpl').innerText,this)">Copy template</button>
       </div>
     </div>
 
@@ -575,20 +597,10 @@ Notes: [what's happening, what's next]
           <tr><td><strong>Live</strong></td><td>Ads running — monitoring ROAS</td><td>Check #team-live daily. Rebrief when Louie flags. Watch for Cat 4.</td></tr>
         </table>
       </div>
-      <div class="lbl">Build stage handoff chain — all tracked in #team-build</div>
-      <div class="card" style="padding:0;overflow:hidden">
-        <table class="tri">
-          <tr><th>Stage</th><th>Owner</th><th>When done → tag</th></tr>
-          <tr><td>Skeletal store build</td><td>Neil + Allyzza</td><td>April → AI content + store copy</td></tr>
-          <tr><td>AI content + store copy</td><td>April + Paul</td><td>Sam + Marinel → email flows + socials</td></tr>
-          <tr><td>Email flows</td><td>Sam</td><td>Wait for socials, then tag Shiela → QC</td></tr>
-          <tr><td>Social media setup</td><td>Marinel</td><td>Wait for email, then tag Shiela → QC</td></tr>
-          <tr><td>QC</td><td>Shiela</td><td>Tag Abe — ready for launch call booking</td></tr>
-        </table>
-      </div>
-      <div class="card" style="margin-top:10px;background:rgba(245,197,24,.05);border-color:rgba(245,197,24,.2)">
-        <h3 style="color:var(--warn);margin-bottom:6px">Your job in the handoff chain</h3>
-        <p style="font-size:13px;color:var(--m2);line-height:1.6">Monitor #team-build List daily. If a stage is marked "done" and 24 hours pass with no tag to the next person — you chase it and tag them yourself. You are the one keeping it moving.</p>
+      <div class="card" style="background:rgba(245,197,24,.05);border-color:rgba(245,197,24,.2)">
+        <h3 style="color:var(--warn);margin-bottom:4px">Your job in handoffs</h3>
+        <p style="font-size:13px;color:var(--m2);line-height:1.6">If a stage is marked "done" in #team-build and 24 hours pass with no tag to the next person — chase it and tag them yourself. You keep it moving.</p>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px">Chain: Neil (skeletal) → April (AI content) → Sam + Marinel (email + socials) → Shiela (QC) → Abe (launch call)</p>
       </div>
     </div>
 
@@ -625,6 +637,15 @@ Notes: [what's happening, what's next]
       <div id="links-list"></div>
     </div>
 
+  </div>
+</div>
+
+<!-- ─── TUTORIAL OVERLAY ─── -->
+<div class="tut-overlay hidden" id="tut-overlay" onclick="closeTutIfBg(event)">
+  <div class="tut-box">
+    <div class="tut-hdr"><div class="tut-step-lbl" id="tut-label"></div><button class="tut-x" onclick="closeTut()">✕ Close</button></div>
+    <div class="tut-body" id="tut-body"></div>
+    <div class="tut-footer"><div class="tut-dots" id="tut-dots"></div><div class="tut-nav"><button class="tut-back" id="tut-back-btn" onclick="tutNav(-1)">← Back</button><button class="tut-next" id="tut-next-btn" onclick="tutNav(1)">Next →</button></div></div>
   </div>
 </div>
 
@@ -774,6 +795,7 @@ function openHub() {
   renderRules();
   renderLogins();
   renderLinks();
+  if(!localStorage.getItem('fc_tour_done_'+vaName)){ setTimeout(()=>launchTutorial(0),600); }
 }
 
 // ════ TABS ════
@@ -977,6 +999,41 @@ function renderLinks(){
     a.innerHTML=`<span class="link-icon">${l.icon}</span><div class="link-body"><strong>${l.label}</strong><span>${l.sub}</span></div><span style="color:var(--muted)">↗</span>`;
     wrap.appendChild(a);
   });
+}
+
+// ════ TUTORIAL ════
+const TOUR=[
+  { icon:'🗺️', title:'Your daily command center', desc:'Five tabs, everything in one place. You\'ll start on Today every morning, use Chat to draft everything, and check Pipeline + Feeds to track where clients are.\n\nThis tour takes 2 minutes.', tip:'<strong>Tip:</strong> Reopen this tour anytime with the "? Tour" button at the top.' },
+  { tab:'Today', icon:'✅', title:'Today tab — run this every single day', desc:'Five steps, complete in order. Sweep client channels → check Slack sections for builder actions and new onboards → check team channels → work the FC Builder → draft replies + morning summary to Abe.\n\nTriage table tells you how urgent each thing is: Fire → Urgent → Secondary.', tip:'<strong>Non-negotiable:</strong> Nothing goes to a client without Abe\'s approval. Draft in Chat first.' },
+  { tab:'Chat', icon:'💬', title:'Chat — write everything here', desc:'Six shortcuts cover every situation:\n• Draft client message — any client reply\n• Builder help — stuck in the FC Builder?\n• Write ad brief — for Stage 5 clients\n• Morning summary — format your notes for Abe\n• Escalation check — not sure if you should handle it?\n• Team task — assign to a team member\n\nDraft → copy → send to Abe before anything goes out.', tip:'<strong>Training mode on:</strong> Every draft shows "Send to Abe for approval" — opens WhatsApp with the draft pre-filled.' },
+  { tab:'Pipeline', icon:'🔄', title:'Pipeline — the 9-stage client journey', desc:'Every client moves through 9 stages. Your core work:\n• Stage 2 (Product) — done in FC Builder\n• Stage 3 (Branding) — done in FC Builder\n• Stage 5 (Ad Briefs) — write via Chat → post Canvas in #team-ads\n\nWhen a client approves in Slack → go into builder → advance stage → move their Slack channel to the next section.', tip:'<strong>Builder workflow:</strong> FC Builder generates the review link + template. Use the template — never custom messages.' },
+  { tab:'Feeds', icon:'📡', title:'Feeds — team channels to check daily', desc:'Four channels, every morning:\n1. #team-live — Louie\'s ROAS. Cat 4 flags, below-BER accounts, rebrief requests.\n2. #team-brandbuilds-eod — what the build team did yesterday.\n3. #team-setup — builder-stage clients (product + branding).\n4. #team-build — store build handoffs.\n\nIf a stage is marked done and 24 hours pass with no handoff tag — you chase it.', tip:'<strong>Louie ROAS:</strong> If he hasn\'t posted by 6pm — chase him.' },
+  { tab:'Rules', icon:'🚨', title:'Rules — non-negotiables', desc:'Escalation list: check it before replying to ANYONE. Some clients are Austin/Will only.\n\nRefund or legal language: WhatsApp Abe immediately. Don\'t draft. Don\'t wait for sync.\n\nMessaging: never send without approval, never "--", never "soon" or "shortly".\n\nBriefs: Cat 4 = no brief, flag Abe. Video only.', tip:'<strong>5pm AEST sync (Mon-Sat):</strong> Have all flags and drafts ready by 4:45pm. Austin calls it, you act immediately after.' },
+  { tab:'Links', icon:'🔗', title:'Links + Logins', desc:'Links tab has every tool: FC Builder, Ops Playbook, Master To-Do, Ad Brief Template, Slack, Claude backup.\n\nLogins section at the top has your FC Builder and Slack credentials. Treat them as confidential.', tip:'<strong>FC Builder:</strong> admin.freedomclub.com — login with abe@freedomclub.com. Your main daily tool.' },
+  { icon:'🚩', title:'Flag Abe — the red button', desc:'Any fire — refund threat, legal language, angry client — hit the red Flag Abe button immediately. Opens WhatsApp with a pre-filled message.\n\nDon\'t wait. Don\'t try to resolve fires yourself.', tip:'<strong>You\'re ready.</strong> Start on the Today tab. Unsure about anything? Chat tab → Escalation check.' },
+];
+let tutStep=0;
+function launchTutorial(step){ tutStep=step||0; document.getElementById('tut-overlay').classList.remove('hidden'); renderTutStep(); }
+function closeTut(){ document.getElementById('tut-overlay').classList.add('hidden'); localStorage.setItem('fc_tour_done_'+vaName,'1'); }
+function closeTutIfBg(e){ if(e.target===document.getElementById('tut-overlay'))closeTut(); }
+function tutNav(dir){ const n=tutStep+dir; if(n<0||n>=TOUR.length){closeTut();return;} tutStep=n; renderTutStep(); }
+function renderTutStep(){
+  const s=TOUR[tutStep]; const total=TOUR.length;
+  document.getElementById('tut-label').textContent='Step '+(tutStep+1)+' of '+total+(s.tab?' — '+s.tab+' tab':'');
+  document.getElementById('tut-body').innerHTML='<div class="tut-icon">'+s.icon+'</div><div class="tut-title">'+s.title+'</div><div class="tut-desc">'+s.desc+'</div>'+(s.tip?'<div class="tut-tip">'+s.tip+'</div>':'');
+  const dots=document.getElementById('tut-dots'); dots.innerHTML='';
+  for(let i=0;i<total;i++){ const d=document.createElement('div'); d.className='tut-dot'+(i<tutStep?' done':i===tutStep?' active':''); d.onclick=(()=>{const idx=i;return()=>{tutStep=idx;renderTutStep();}})(); dots.appendChild(d); }
+  document.getElementById('tut-back-btn').style.display=tutStep===0?'none':'';
+  document.getElementById('tut-next-btn').textContent=tutStep===total-1?'Done ✓':'Next →';
+}
+function goToChatBrief(){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-chat').classList.add('active');
+  document.querySelector('.nav-btn:nth-child(2)').classList.add('active');
+  const inp=document.getElementById('chat-input');
+  inp.value=C.shortcuts.find(s=>s.label==='Write ad brief')?.prompt||'';
+  autosize(inp); inp.focus();
 }
 
 // ════ UTILS ════
