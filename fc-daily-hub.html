@@ -850,13 +850,13 @@ function addMsg(text,cls) {
 function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function buildActions(reply) {
   let h='<div class="msg-actions"><button class="msg-btn" onclick="copyText('+JSON.stringify(reply)+',this)">Copy draft</button>';
-  if(C.trainingMode&&C.abePhone&&C.callmebotKey) h+='<button class="msg-btn approve" onclick="sendApproval(this,'+JSON.stringify(reply)+')">Send to Abe for approval</button>';
+  if(C.trainingMode&&C.abePhone) h+='<button class="msg-btn approve" onclick="sendApproval(this,'+JSON.stringify(reply)+')">Send to Abe for approval</button>';
   return h+'</div>';
 }
-async function sendApproval(btn,reply) {
-  const msg='🤖 FC HUB DRAFT ('+vaName+')\n\n'+reply.substring(0,1400)+'\n\nReply YES to approve or reply with changes.';
-  try{ await fetch('https://api.callmebot.com/whatsapp.php?phone='+C.abePhone+'&text='+encodeURIComponent(msg)+'&apikey='+C.callmebotKey,{mode:'no-cors'}); btn.className='msg-btn sent'; btn.textContent='✓ Sent to Abe'; }
-  catch(e){ btn.textContent='Failed — check CallMeBot'; }
+function sendApproval(btn,reply) {
+  const msg='🚨 FC HUB DRAFT — '+vaName+'\n\n'+reply.substring(0,1400)+'\n\n[Approve and reply to confirm]';
+  window.open('https://wa.me/'+C.abePhone+'?text='+encodeURIComponent(msg),'_blank');
+  btn.className='msg-btn sent'; btn.textContent='✓ Sent to Abe';
 }
 
 // ════ TEAM ════
