@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC Daily Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0e;--s1:#161618;--s2:#1e1e21;--border:#2a2a2e;
+  --accent:#7c6fff;--a2:#a594ff;--text:#f0f0f0;--muted:#555;--m2:#999;
+  --fire:#ff4d4d;--urgent:#ff9533;--warn:#f5c518;--good:#3ddc84;--blue:#4da6ff;
+  --r:12px;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+
+/* ── FULLSCREEN OVERLAY (login + onboarding) ── */
+.screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px}
+.screen.hidden{display:none}
+.screen-box{width:100%;max-width:480px}
+.screen-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.screen-logo .dot{width:10px;height:10px;border-radius:50%;background:var(--good)}
+.screen-logo span{font-size:14px;font-weight:600;color:var(--m2)}
+.screen-box h1{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.2;margin-bottom:10px}
+.screen-box h1 em{font-style:normal;color:var(--a2)}
+.screen-box .sub{font-size:15px;color:var(--m2);line-height:1.6;margin-bottom:28px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--m2);margin-bottom:6px;font-weight:500}
+.field input{width:100%;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--text);font-family:inherit;transition:border-color .15s}
+.field input:focus{outline:none;border-color:var(--accent)}
+.field input::placeholder{color:var(--muted)}
+.primary-btn{width:100%;background:var(--accent);border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;color:white;cursor:pointer;transition:background .15s;margin-top:6px}
+.primary-btn:hover{background:var(--a2)}
+.err{font-size:13px;color:var(--fire);margin-top:8px;display:none}
+
+/* ── ONBOARDING ── */
+.ob-progress{display:flex;gap:6px;margin-bottom:32px}
+.ob-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s}
+.ob-dot.active{background:var(--accent)}
+.ob-dot.done{background:var(--good)}
+.ob-icon{font-size:36px;margin-bottom:16px}
+.ob-rules{margin:20px 0;display:flex;flex-direction:column;gap:8px}
+.ob-rule{display:flex;align-items:flex-start;gap:10px;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.ob-rule .r-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.ob-rule .r-text{font-size:13px;color:var(--m2);line-height:1.5}
+.ob-rule .r-text strong{color:var(--text);display:block;font-size:13px;margin-bottom:2px}
+.ob-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.ob-tool{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:16px}
+.ob-tool .t-icon{font-size:24px;margin-bottom:8px}
+.ob-tool h3{font-size:14px;font-weight:600;margin-bottom:4px}
+.ob-tool p{font-size:12px;color:var(--m2);line-height:1.5}
+.ob-step-list{margin:16px 0;display:flex;flex-direction:column;gap:8px}
+.ob-step-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--m2);line-height:1.5}
+.ob-step-num{width:22px;height:22px;background:var(--accent);border-radius:50%;font-size:11px;font-weight:700;color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ob-acknowledge{display:flex;align-items:flex-start;gap:10px;background:rgba(255,77,77,.07);border:1px solid rgba(255,77,77,.2);border-radius:10px;padding:12px 14px;margin:16px 0;cursor:pointer}
+.ob-acknowledge input{margin-top:3px;accent-color:var(--accent);width:16px;height:16px;flex-shrink:0}
+.ob-acknowledge label{font-size:13px;color:var(--m2);cursor:pointer;line-height:1.5}
+.ob-acknowledge label strong{color:var(--fire)}
+.sec-btn{width:100%;background:none;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:14px;color:var(--m2);cursor:pointer;transition:all .15s;margin-top:8px}
+.sec-btn:hover{border-color:var(--accent);color:var(--a2)}
+
+/* ── TOP BAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(12,12,14,.94);backdrop-filter:blur(12px);z-index:100}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.fc-dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.topbar h1{font-size:14px;font-weight:600}
+.va-name{font-size:12px;color:var(--m2);background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:4px 10px}
+.topbar-right{display:flex;gap:7px;align-items:center}
+.date-pill{font-size:12px;color:var(--m2);background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:5px 11px}
+.training-badge{font-size:11px;background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25);color:var(--warn);border-radius:20px;padding:5px 10px;font-weight:600}
+.flag-btn{display:flex;align-items:center;gap:5px;background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.25);color:var(--fire);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .15s}
+.flag-btn:hover{background:rgba(255,77,77,.2)}
+.logout-btn{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 8px;transition:color .15s}
+.logout-btn:hover{color:var(--m2)}
+
+/* ── NAV ── */
+.nav{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--border);overflow-x:auto}
+.nav-btn{background:none;border:none;color:var(--m2);font-size:13px;padding:11px 15px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{color:var(--a2);border-bottom-color:var(--a2);font-weight:500}
+
+/* ── CONTENT ── */
+.content{max-width:960px;margin:0 auto;padding:24px 20px 80px}
+.tab{display:none}
+.tab.active{display:block}
+.lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:24px 0 10px;font-weight:600}
+.lbl:first-child{margin-top:0}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:10px}
+.card h3{font-size:14px;font-weight:600;margin-bottom:6px}
+.card p{font-size:13px;color:var(--m2);line-height:1.6}
+
+/* ── CHECKLIST ── */
+.cl-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.cl-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
+.cl-head h3{font-size:13px;font-weight:600}
+.cl-meta{display:flex;gap:8px;align-items:center}
+.cl-prog{font-size:12px;color:var(--m2)}
+.reset-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:11px;padding:4px 9px;cursor:pointer;transition:all .15s}
+.reset-btn:hover{border-color:var(--accent);color:var(--a2)}
+.prog-bar{height:3px;background:var(--s2)}
+.prog-fill{height:3px;background:var(--accent);transition:width .3s}
+.cl-item{display:flex;gap:12px;align-items:flex-start;padding:11px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.cl-item:last-child{border-bottom:none}
+.cl-item:hover{background:var(--s2)}
+.chk{width:20px;height:20px;border:2px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.cl-item.done .chk{background:var(--accent);border-color:var(--accent)}
+.chkmark{display:none}
+.cl-item.done .chkmark{display:block}
+.cl-item.done .cl-title{text-decoration:line-through;color:var(--muted)}
+.cl-title{font-size:13px;line-height:1.4}
+.cl-sub{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.cl-link{display:inline-flex;align-items:center;gap:4px;background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:11px;color:var(--m2);text-decoration:none;margin-top:5px;transition:all .15s}
+.cl-link:hover{border-color:var(--accent);color:var(--a2)}
+
+/* ── CHAT ── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 180px);min-height:380px}
+.shortcuts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sc-btn{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--m2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.sc-btn:hover{border-color:var(--accent);color:var(--a2)}
+.chat-msgs{flex:1;overflow-y:auto;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.msg{max-width:84%;padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.6}
+.msg.user{align-self:flex-end;background:var(--accent);color:white;border-bottom-right-radius:3px}
+.msg.bot{align-self:flex-start;background:var(--s2);border-bottom-left-radius:3px}
+.msg.thinking{opacity:.4}
+.msg.thinking::after{content:'...';animation:dots 1s infinite}
+@keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
+.msg-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.msg-btn{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--m2);cursor:pointer;transition:all .15s}
+.msg-btn:hover{border-color:var(--accent);color:var(--a2)}
+.msg-btn.approve{background:rgba(255,149,51,.1);border-color:rgba(255,149,51,.3);color:var(--urgent)}
+.msg-btn.sent{background:rgba(61,220,132,.1);border-color:rgba(61,220,132,.3);color:var(--good);cursor:default}
+.empty-chat{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);text-align:center;gap:8px}
+.empty-chat .e-icon{font-size:32px;opacity:.4}
+.chat-row{display:flex;gap:8px}
+.chat-input{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:14px;color:var(--text);resize:none;font-family:inherit;line-height:1.5;min-height:44px;max-height:120px;transition:border-color .15s}
+.chat-input:focus{outline:none;border-color:var(--accent)}
+.chat-input::placeholder{color:var(--muted)}
+.send-btn{background:var(--accent);border:none;border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s}
+.send-btn:hover{background:var(--a2)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed}
+.send-btn svg{width:18px;height:18px;fill:white}
+.setup-notice{background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.setup-notice h4{font-size:13px;font-weight:600;color:var(--warn);margin-bottom:4px}
+.setup-notice p{font-size:12px;color:var(--m2);line-height:1.6}
+.setup-notice code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:11px;color:var(--a2)}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.tc{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tc-head{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-bottom:1px solid var(--border)}
+.tc-info h4{font-size:13px;font-weight:600}
+.tc-info span{font-size:11px;color:var(--muted)}
+.sdot{width:8px;height:8px;border-radius:50%}
+.sdot.active{background:var(--good)}
+.sdot.blocked{background:var(--fire)}
+.sdot.idle{background:var(--border)}
+.tc-tasks{padding:8px 13px}
+.tc-task{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--m2);line-height:1.4}
+.tc-task:last-child{border-bottom:none}
+.tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px;cursor:pointer}
+.tdot.active{background:var(--good)}
+.tdot.blocked{background:var(--fire)}
+.tdot.done{background:var(--muted)}
+.tc-task.done-task span{text-decoration:line-through;opacity:.5}
+.tc-empty{font-size:11px;color:var(--muted);padding:4px 0}
+.tc-add{display:flex;gap:6px;padding:8px 13px;border-top:1px solid var(--border)}
+.tc-add input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;color:var(--text);font-family:inherit}
+.tc-add input:focus{outline:none;border-color:var(--accent)}
+.tc-add input::placeholder{color:var(--muted)}
+.tc-add-btn{background:var(--accent);border:none;border-radius:6px;padding:5px 9px;font-size:12px;color:white;cursor:pointer}
+.team-copy-btn{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-size:12px;color:var(--m2);cursor:pointer;transition:all .15s}
+.team-copy-btn:hover{border-color:var(--accent);color:var(--a2)}
+
+/* ── PIPELINE ── */
+.pipe{display:flex;gap:13px;margin-bottom:4px}
+.pipe-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.pipe-num{width:28px;height:28px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white}
+.pipe-line{width:2px;flex:1;background:var(--border);margin:3px 0;min-height:10px}
+.pipe-body{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:7px}
+.pipe-body h4{font-size:13px;font-weight:600;color:var(--a2);margin-bottom:3px}
+.pipe-body p{font-size:12px;color:var(--m2);line-height:1.5}
+.pipe-owner{font-size:11px;color:var(--muted);margin-top:5px}
+.pipe-note{font-size:11px;color:var(--m2);background:var(--s2);border-left:2px solid var(--accent);padding:4px 8px;border-radius:0 4px 4px 0;margin-top:6px;line-height:1.5}
+
+/* ── RULES ── */
+.rule-block{border-radius:10px;padding:13px 15px;margin-bottom:10px}
+.rule-block.danger{background:rgba(255,77,77,.06);border:1px solid rgba(255,77,77,.18)}
+.rule-block.warn{background:rgba(255,149,51,.06);border:1px solid rgba(255,149,51,.18)}
+.rule-block.info{background:rgba(77,166,255,.06);border:1px solid rgba(77,166,255,.18)}
+.rule-block h4{font-size:13px;font-weight:600;margin-bottom:7px}
+.rule-block.danger h4{color:var(--fire)}
+.rule-block.warn h4{color:var(--urgent)}
+.rule-block.info h4{color:var(--blue)}
+.rule-block li{font-size:13px;color:var(--m2);line-height:1.7}
+.rule-block ul{padding-left:16px}
+.ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.ex-grid{grid-template-columns:1fr}}
+
+/* ── LINKS ── */
+.link-item{display:flex;align-items:center;gap:11px;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;text-decoration:none;color:var(--text);transition:border-color .15s}
+.link-item:hover{border-color:var(--accent)}
+.link-icon{font-size:20px;flex-shrink:0}
+.link-body{flex:1}
+.link-body strong{font-size:14px;display:block}
+.link-body span{font-size:12px;color:var(--m2)}
+
+/* ── LOGINS ── */
+.login-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px}
+.login-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.login-header span{font-size:14px;font-weight:600}
+.login-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.login-row:last-child{margin-bottom:0}
+.login-label{font-size:11px;color:var(--muted);width:60px;flex-shrink:0;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.login-val{flex:1;font-size:13px;color:var(--m2);background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:5px 9px;font-family:'SF Mono',monospace;letter-spacing:.3px}
+.login-val.empty{color:var(--muted);font-style:italic;font-family:inherit;letter-spacing:0}
+
+/* ── TRIAGE ── */
+.tri{width:100%;border-collapse:collapse;font-size:12px}
+.tri th{text-align:left;padding:8px 10px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border)}
+.tri td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--m2);vertical-align:top;line-height:1.4}
+.tri tr:last-child td{border-bottom:none}
+.badge{display:inline-block;border-radius:5px;padding:2px 7px;font-size:11px;font-weight:600}
+.b-fire{background:rgba(255,77,77,.12);color:var(--fire)}
+.b-urgent{background:rgba(255,149,51,.12);color:var(--urgent)}
+.b-warn{background:rgba(245,197,24,.1);color:var(--warn)}
+.b-good{background:rgba(61,220,132,.1);color:var(--good)}
+</style>
+</head>
+<body>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// FC DAILY HUB — CONFIG (edit this block only)
+// ═══════════════════════════════════════════════════════════
+const C = {
+
+  // ── AUTH ─────────────────────────────────────────────────
+  password: 'fcops2025',        // shared password for all VAs
+
+  // ── TRAINING MODE ────────────────────────────────────────
+  // true = every chat response shows "Send to Abe for approval"
+  // false = she works independently
+  trainingMode: true,
+
+  // ── CHAT ENDPOINT ────────────────────────────────────────
+  // Paste your Vercel bot URL here after deployment
+  chatEndpoint: 'https://fc-ops-bot.vercel.app/api/webhook',
+
+  // ── ABE NOTIFICATIONS (CallMeBot) ────────────────────────
+  abePhone:     '',             // e.g. '61412345678'
+  callmebotKey: '',             // from callmebot.com
+
+  // ── CLAUDE PROJECT ───────────────────────────────────────
+  claudeProject: 'https://claude.ai/project/019f7d9a-c297-7783-ad20-9597e86292de',
+
+  // ── LINKS ────────────────────────────────────────────────
+  links: [
+    { icon:'🏗️', label:'FC Builder (admin)',      sub:'Product + branding steps — your main work tool', url:'https://admin.freedomclub.com' },
+    { icon:'📖', label:'FC Ops Playbook',        sub:'Daily SOP reference',            url:'https://freedomclub-clients.slack.com/docs/T084JU5E46N/F0BJBBU6ZSS' },
+    { icon:'✅', label:'Master To-Do',            sub:'Daily task tracker',             url:'https://freedomclub-clients.slack.com/docs/T084JU5E46N/F0BHY3YJ0MD' },
+    { icon:'📝', label:'Ad Brief Template',       sub:'Format for every brief',         url:'https://freedomclub-clients.slack.com/docs/T084JU5E46N/F0BJBCKPVJS' },
+    { icon:'💬', label:'Slack Workspace',         sub:'All client + team channels',     url:'https://freedomclub-clients.slack.com' },
+    { icon:'🤖', label:'Claude — FC Ops Project', sub:'Backup when chat is not set up', url:'https://claude.ai/project/019f7d9a-c297-7783-ad20-9597e86292de' },
+  ],
+
+  // ── DAILY STEPS ──────────────────────────────────────────
+  morningSteps: [
+    { id:'m1', title:'Sweep every client channel in Slack', sub:'Every builtforyou- and brandbuild- channel. Messages, complaints, responses, anything. Every day including weekends.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
+    { id:'m2', title:'Check the "Channels" section for new onboards', sub:'Jimmy onboards clients and a new channel appears. Check if their post-onboarding checklist has been sent. If not — send it. This kicks off the product selection process in the builder.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
+    { id:'m3', title:'Check "Product Review" + "Brand Review" sections', sub:'Any client who replied with an approval? Open the builder for that client, process their approval, advance to the next stage. Then move their Slack channel to the correct section.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
+    { id:'m4', title:'Check team channels', sub:'#team-live: Louie\'s ROAS report — Cat 4 flags, accounts below BER, rebrief requests. #team-build EOD: what everyone worked on yesterday. Flag anything overdue or blocked.', link:{ label:'Open team-live', url:'https://freedomclub-clients.slack.com/archives/C0B2CL43N73' } },
+    { id:'m5', title:'Update Master To-Do + prioritise your day', sub:'Fire (Abe now) → Urgent (today) → Builder queue (active clients to advance) → Secondary. Fires at top. Builder tasks in order.', link:{ label:'Open To-Do', url:'https://freedomclub-clients.slack.com/docs/T084JU5E46N/F0BHY3YJ0MD' } },
+    { id:'m6', title:'Work through the FC Builder for active clients', sub:'Log in and move each client forward. Product selection → send review link via Slack template → move channel to "Product Review". Branding → send review link → move channel to "Brand Review". One client at a time.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
+    { id:'m7', title:'Draft urgent replies + send morning summary to Abe', sub:'Use Chat tab for client drafts — nothing goes to a client without his approval. Morning summary shortcut → paste your notes → copy → WhatsApp Abe.', link:null },
+    { id:'m8', title:'Before 4:45pm — prep Austin sync notes', sub:'Every Mon-Sat at 5pm AEST. All flagged items, escalations, anything needing a leadership call. Have drafts ready so Austin can decide and you act immediately after.', link:null },
+  ],
+
+  // ── CHAT SHORTCUTS ───────────────────────────────────────
+  shortcuts: [
+    { label:'Draft client message', prompt:'Draft a reply for [Client Name] in [channel name].\n\nWhat they said: "[paste their message]"\nPipeline stage: [stage]\nContext: [any relevant history]' },
+    { label:'Builder help',         prompt:'I\'m working in the FC Builder on the [step name] stage for client [Name].\n\nSituation: [describe what you\'re looking at or stuck on]\n\nWhat should I do here?' },
+    { label:'Write ad brief',       prompt:'Write 3 video ad scripts for [Brand / Client].\nCategory: Cat [X] · Control creative: [describe] · ROAS: [X]\nProduct link: [link]\nShopify link: [link]' },
+    { label:'Morning summary',      prompt:'Format my sweep notes as a WhatsApp summary for Abe — 5-10 bullets, direct.\n\nMy notes:\n[paste notes here]' },
+    { label:'Escalation check',     prompt:'Client [Name]: [describe situation]. Should I handle, draft for Abe to approve, or escalate to Austin/Will?' },
+    { label:'Team task',            prompt:'Draft a Slack message assigning a task to [team member]. Task: [describe]. Client: [name]. Deadline: [date].' },
+  ],
+
+  // ── TEAM ─────────────────────────────────────────────────
+  team: [
+    { id:'jimmy',   name:'Jimmy',              role:'Client comms · onboarding' },
+    { id:'shiela',  name:'Shiela',             role:'Checklists · admin · QC' },
+    { id:'paul',    name:'Paul',               role:'AI images · store content' },
+    { id:'april',   name:'April',              role:'AI content · store copy' },
+    { id:'marinel', name:'Marinel',            role:'Social media' },
+    { id:'sam',     name:'Sam',                role:'Email · Klaviyo' },
+    { id:'neil',    name:'Neil & Allyzza',     role:'Skeletal store build' },
+    { id:'louie',   name:'Louie',              role:'Ads · ROAS tracking' },
+    { id:'bilal',   name:'Bilal',              role:'Ad account management' },
+    { id:'editors', name:'Muhammad & Triyogi', role:'Video editing' },
+    { id:'austin',  name:'Austin',             role:'Leadership · escalations' },
+  ],
+
+  // ── PIPELINE ─────────────────────────────────────────────
+  pipeline: [
+    { stage:'1. Onboarding',          owner:'Jimmy',                        what:'Jimmy does the onboarding call, sends post-onboarding checklist in Slack. You verify the client completes it.',                   note:'Flag to Jimmy if client goes quiet on checklist.' },
+    { stage:'2. Product Research',    owner:'You (FC Builder)',              what:'Log in to the FC Builder for this client. Select products → the builder generates the review link + Slack template. Send the templated message to the client. Move their Slack channel to the "Product Review" section. Follow up at 5 days if no response.', note:'Log approval deadline in Master To-Do. Never send a custom message — use the builder template.' },
+    { stage:'3. Branding',            owner:'You (FC Builder)',              what:'Client approves product → back into builder → complete branding steps. Builder sends the branded review link + Slack template. Send it to the client. Move their channel to "Brand Review" section. Follow up at 3 days.', note:'Check post-approval checklist too — the builder sends a separate client checklist after each approval. Make sure they complete it.' },
+    { stage:'4. Store Build',         owner:'Neil → April → Sam+Marinel → Shiela', what:'Skeletal (Neil & Allyzza) → AI content + copy (April) → Email flows (Sam) + Socials (Marinel) → QC (Shiela). Coordinate every handoff.', note:"Tag the next team the moment a stage is done. Don't let anything sit." },
+    { stage:'5. Ad Briefs',           owner:'You → Muhammad & Triyogi',     what:'Start briefing while store is still in build. Video briefs only. Post Canvas in #team-ads. Ads + store should finish together.', note:'Brief early — goal is everything ready at the same time.' },
+    { stage:'6. Launch Call',         owner:'Abe + client (book via Amy)',   what:'Store + ads ready → book launch call via Amy calendar link (Ops Playbook). Abe walks client through everything. You book it.',   note:'Log call date in Master To-Do commitments.' },
+    { stage:'7. Go Live',             owner:'Louie',                        what:'After launch call, ads go live at 12AM the following day. Louie has the account built. Confirm 12AM activation is set.',         note:'Log live date in Master To-Do.' },
+    { stage:'8. Monitor + Rebrief',   owner:'Louie → You (cycle)',          what:'Louie monitors Batch 1 + provides report. You rebrief. Brief → editors → live with Louie. Repeat until 2 profitable days. By Batch 2 should be profitable — if not, flag to Abe.', note:'Chase Louie report if overdue. Watch for LP issues — flag to Abe if product page is the problem.' },
+    { stage:'9. Handover to Jimmy',   owner:'Abe → Jimmy',                  what:'2 consecutive profitable days = handover. You flag to Abe when it happens. Client moves to Jimmy — off FC active plate.',       note:'Until handover: your job is ads and product page iterations.' },
+  ],
+
+  // ── TOOL LOGINS ──────────────────────────────────────────
+  // Credentials for tools the VA needs to access
+  // Only visible to logged-in users. Update as needed.
+  logins: [
+    { icon:'🏗️', label:'FC Builder (admin.freedomclub.com)', url:'https://admin.freedomclub.com', user:'abe@freedomclub.com', pass:'Freedom1' },
+    { icon:'💬', label:'Slack — sign in with Google', url:'https://freedomclub-clients.slack.com', user:'abe@freedomclub.com', pass:'Freedomclub2026#' },
+  ],
+
+  // ── ESCALATION CLIENTS ───────────────────────────────────
+  // Add/remove clients here. Format: 'Brand (Contact) — reason'
+  // These appear in the Rules tab. VA must check this before replying to anyone.
+  escalationClients: [
+    'GlowRest (Michael & Lisa) — Austin or Will only. Never handle directly.',
+    'TapSimple (Sarah & Matt) — Will or Austin only. Not Abe, not the VA.',
+  ],
+
+  // ── RULES ────────────────────────────────────────────────
+  rules: {
+    escalation: [
+      'Check the escalation client list below before replying to any client.',
+      'Any refund threat — WhatsApp Abe immediately. Do not draft a reply without his approval.',
+      'Any legal language — WhatsApp Abe immediately. Do not respond.',
+      '5pm AEST sync (Mon-Sat) — have all flagged client updates + drafts ready before 4:45pm. Act immediately after Austin gives direction.',
+    ],
+    messaging: [
+      "Never send a client message without Abe's approval.",
+      'Never use double dashes --',
+      'Never say "soon", "shortly", or "we\'ll look into it"',
+      'Never open with "I hope this message finds you well"',
+      'Never push for a call when a text answer will do',
+    ],
+    briefs: [
+      'Cat 4 — DO NOT write a brief. Flag to Abe. Product pivot needed.',
+      'Cat 5 — No brief until pause resolved.',
+      'Cat 2 — Write brief but add HOLD note (LP fix first).',
+      'Always mirror control creative for Ad 1.',
+      'Video briefs only for now. No graphic briefs.',
+    ],
+  },
+
+  // ── FEED CHANNELS ────────────────────────────────────────
+  // Team channels to monitor daily (beyond client channels)
+  feeds: [
+    {
+      icon:'📊', label:'#team-live', sub:'Live clients — ROAS, ad briefs, editors, launch, rebriefing',
+      url:'https://freedomclub-clients.slack.com/archives/C0B2CL43N73',
+      note:'Louie posts daily ROAS here. Check for Cat 4 flags, accounts below BER, rebrief requests. Also where you post video briefs — editors update when videos are done, Louie picks up for launch. If Louie hasn\'t posted by 6pm — chase him.',
+      format:'Expected ROAS report format:\nClient: [Brand]\nBatch: [X]\nSpend: $[X] | Revenue: $[X] | ROAS: [X]\nStatus: [On track / Below BER / Rebrief needed]\nNotes: [what\'s happening, what\'s next]',
+    },
+    {
+      icon:'📋', label:'#team-brandbuilds-eod', sub:'Daily EOD reports from the whole build team',
+      url:'https://freedomclub-clients.slack.com/archives/C0B2UJU5AU9',
+      note:'Auto-posted daily, team replies in thread. Check each morning. Flag to Abe if anyone hasn\'t submitted or if hours look off.',
+      format:'Format:\nDate\nTask — hours\nTotal hours',
+    },
+    {
+      icon:'🏗️', label:'#team-setup (Slack List)', sub:'Product + branding stage — Paul',
+      url:'https://freedomclub-clients.slack.com/archives/C0BJFSM0P3K',
+      note:'Clients in product and branding stage. You work on these in the FC Builder. When builder stages are done and client has approved → move client channel out of "Brand Review" and brief the build team.',
+      format:'List columns: Client | Builder step | Status | Notes',
+    },
+    {
+      icon:'🔨', label:'#team-build (Slack List)', sub:'Store build: skeletal → AI content → email flows → socials → QC',
+      url:'https://freedomclub-clients.slack.com/archives/C0BK8964HMW',
+      note:'Monitor all build stage handoffs. Skeletal (Neil + Allyzza) → AI content (April + Paul) → Email flows (Sam) + Socials (Marinel) → QC (Shiela). Tag the next person the moment a stage is done. If anything has sat at "done" for 24 hours — you chase it.',
+      format:'List columns: Client | Skeletal | AI content | Email flows | Socials | QC | Notes',
+    },
+  ],
+
+  // ── ONBOARDING STEPS ─────────────────────────────────────
+  // Edit these to update what new VAs see on first login
+  onboarding: [
+    {
+      icon: '👋',
+      title: 'Welcome to Freedom Club Ops.',
+      body: 'This hub is your entire job in one place. Five screens, then you\'re ready to start. Take two minutes to read through them.',
+      type: 'intro',
+    },
+    {
+      icon: '🏗️',
+      title: 'What Freedom Club does.',
+      body: 'FC builds e-commerce stores for clients from scratch — product, brand, store, ads. Your job is to make sure nothing falls through the cracks while that happens.',
+      type: 'steps',
+      steps: [
+        'Sweep every client Slack channel daily — flag issues, draft replies',
+        'Run product selection and branding for each new client in the FC Builder',
+        'Move clients through Slack sections as they get approvals (Product Review → Brand Review → Build)',
+        'Keep the build team on track — tag handoffs, chase blockers, coordinate stages',
+        'Write ad briefs and manage live accounts until 2 profitable days → handover to Jimmy',
+      ],
+    },
+    {
+      icon: '🛠️',
+      title: 'Your two tools.',
+      body: 'That\'s it. Two things.',
+      type: 'tools',
+    },
+    {
+      icon: '🚨',
+      title: 'Before you reply to anyone.',
+      body: 'Three things to know before you touch a single client message. These apply to every client, every day.',
+      type: 'rules',
+    },
+    {
+      icon: '✅',
+      title: 'You\'re ready.',
+      body: 'Start with the Today tab. Run your first channel sweep. If you\'re unsure about anything, use the Chat tab or hit Flag to Abe.',
+      type: 'ready',
+    },
+  ],
+};
+// ═══════════════════════════════════════════════════════════
+</script>
+
+<!-- ─── LOGIN SCREEN ─── -->
+<div class="screen" id="login-screen">
+  <div class="screen-box">
+    <div class="screen-logo"><div class="dot"></div><span>Freedom Club</span></div>
+    <h1>FC Daily <em>Hub</em></h1>
+    <p class="sub">Your daily operating system — sweep, brief, coordinate, done.</p>
+    <div class="field"><label>Your name</label><input type="text" id="login-name" placeholder="e.g. Zian" autocomplete="name"></div>
+    <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter the team password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="primary-btn" onclick="doLogin()">Sign in →</button>
+    <div class="err" id="login-err">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ─── ONBOARDING SCREEN ─── -->
+<div class="screen hidden" id="ob-screen">
+  <div class="screen-box">
+    <div class="ob-progress" id="ob-dots"></div>
+    <div id="ob-content"></div>
+  </div>
+</div>
+
+<!-- ─── MAIN HUB ─── -->
+<div id="hub" style="display:none">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="fc-dot"></div>
+      <h1>FC Daily Hub</h1>
+      <div class="va-name" id="va-name-badge"></div>
+    </div>
+    <div class="topbar-right">
+      <div class="date-pill" id="date-pill"></div>
+      <div class="training-badge" id="training-badge" style="display:none">Training Mode</div>
+      <a class="flag-btn" id="flag-btn" href="#" target="_blank">🚨 Flag Abe</a>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="showTab('today',this)">Today</button>
+    <button class="nav-btn" onclick="showTab('chat',this)">Chat</button>
+    <button class="nav-btn" onclick="showTab('team',this)">Team</button>
+    <button class="nav-btn" onclick="showTab('feeds',this)">Feeds</button>
+    <button class="nav-btn" onclick="showTab('pipeline',this)">Pipeline</button>
+    <button class="nav-btn" onclick="showTab('rules',this)">Rules</button>
+    <button class="nav-btn" onclick="showTab('links',this)">Links</button>
+  </div>
+
+  <div class="content">
+
+    <!-- TODAY -->
+    <div class="tab active" id="tab-today">
+      <div class="lbl">Daily Routine — every day including weekends · 5pm Austin sync Mon-Sat</div>
+      <div class="cl-card">
+        <div class="cl-head">
+          <h3>Complete in order</h3>
+          <div class="cl-meta"><span class="cl-prog" id="cl-prog">0/0</span><button class="reset-btn" onclick="resetCl()">Reset</button></div>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0"></div></div>
+        <div id="cl-list"></div>
+      </div>
+      <div class="lbl">Triage</div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="tri">
+          <tr><th>Priority</th><th>Looks like</th><th>What to do</th></tr>
+          <tr><td><span class="badge b-fire">Fire</span></td><td>Upset client, waiting 3+ days, refund threat</td><td>Flag Abe immediately. Draft in Chat tab.</td></tr>
+          <tr><td><span class="badge b-urgent">Urgent</span></td><td>Client question, commitment due this week</td><td>Add to Master To-Do. Draft reply.</td></tr>
+          <tr><td><span class="badge b-warn">Secondary</span></td><td>No action yet but monitor</td><td>Note in Master To-Do.</td></tr>
+          <tr><td><span class="badge b-good">Done</span></td><td>Already handled, nothing outstanding</td><td>Skip.</td></tr>
+        </table>
+      </div>
+      <div class="lbl">WhatsApp Summary Template</div>
+      <div class="card" style="position:relative">
+        <pre id="summary-tpl" style="font-size:12px;color:var(--m2);line-height:1.7;white-space:pre-wrap;font-family:'SF Mono',monospace">Morning sweep done.
+
+- FIRE: [Client] — [situation] — draft ready for your review
+- DUE TODAY: [Client] — [what's due]
+- QUIET: [Client] — last message [X] days ago, nothing from our side
+- TEAM: [Person] — [task] — was due [date]</pre>
+        <button class="msg-btn" style="margin-top:10px" onclick="copyText(document.getElementById('summary-tpl').innerText,this)">Copy template</button>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="tab" id="tab-chat">
+      <div class="setup-notice" id="setup-notice" style="display:none">
+        <h4>⚙️ Chat not connected yet</h4>
+        <p>Set <code>chatEndpoint</code> in the CONFIG after deploying the Vercel bot. Until then, <a href="#" onclick="window.open(C.claudeProject,'_blank')" style="color:var(--a2)">open Claude directly</a>.</p>
+      </div>
+      <div class="shortcuts" id="shortcuts"></div>
+      <div class="chat-wrap">
+        <div class="chat-msgs" id="chat-msgs">
+          <div class="empty-chat" id="empty-state">
+            <div class="e-icon">🤖</div>
+            <div style="font-size:14px;color:var(--muted)">Ask me anything about FC ops</div>
+            <div style="font-size:12px;color:var(--muted)">Drafts · Briefs · SOPs · Escalations</div>
+          </div>
+        </div>
+        <div class="chat-row">
+          <textarea class="chat-input" id="chat-input" placeholder="Ask a question or describe what you need..." rows="1" onkeydown="handleKey(event)" oninput="autosize(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMsg()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAM -->
+    <div class="tab" id="tab-team">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="lbl" style="margin:0">Team Status — click coloured dot to update</div>
+        <button class="team-copy-btn" onclick="copyTeam()">Copy update for Abe</button>
+      </div>
+      <div class="team-grid" id="team-grid"></div>
+    </div>
+
+    <!-- FEEDS -->
+    <div class="tab" id="tab-feeds">
+      <div class="card" style="background:rgba(124,111,255,.05);border-color:rgba(124,111,255,.2);margin-bottom:18px">
+        <h3 style="color:var(--a2)">What to check — and in what order</h3>
+        <p style="margin-top:4px">(1) #team-live: Louie's ROAS report → (2) #team-brandbuilds-eod: build team EOD from yesterday → (3) #team-setup: builder progress for product/branding clients → (4) #team-build: handoff status across all store build stages. This is your real-time view of where every client is.</p>
+      </div>
+      <div id="feeds-list"></div>
+      <div class="lbl">Louie report format (paste this in #team-live if he hasn't posted)</div>
+      <div class="card">
+        <pre id="louie-tpl" style="font-size:12px;color:var(--m2);line-height:1.8;white-space:pre-wrap;font-family:'SF Mono',monospace">EOD AD REPORT — [Date]
+
+Client: [Brand name]
+Batch: [X]
+Spend: $[X] | Revenue: $[X] | ROAS: [X.X]
+BER: [X.X] | Status: [On track / Below BER / Rebrief needed / Paused]
+Notes: [what's happening, what's next]
+
+---
+(repeat for each live client)</pre>
+        <button class="msg-btn" style="margin-top:10px" onclick="copyText(document.getElementById('louie-tpl').innerText,this)">Copy format</button>
+      </div>
+      <div class="lbl">Slack channel sections — where clients sit in the pipeline</div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="tri">
+          <tr><th>Slack section</th><th>Means</th><th>Your action</th></tr>
+          <tr><td><strong>Channels</strong></td><td>New client just onboarded (Jimmy did the call)</td><td>Verify post-onboarding checklist sent. Start product selection in builder.</td></tr>
+          <tr><td><strong>Product Review</strong></td><td>Review link sent — waiting for client approval</td><td>Chase at 5 days. When approved → go into builder → start branding.</td></tr>
+          <tr><td><strong>Brand Review</strong></td><td>Branding sent — waiting for client approval</td><td>Chase at 3 days. When approved → brief build team in #team-build.</td></tr>
+          <tr><td><strong>Store Build</strong></td><td>Active store build in progress</td><td>Monitor #team-build List. Chase handoffs. Tag next person when stage done.</td></tr>
+          <tr><td><strong>Live</strong></td><td>Ads running — monitoring ROAS</td><td>Check #team-live daily. Rebrief when Louie flags. Watch for Cat 4.</td></tr>
+        </table>
+      </div>
+      <div class="lbl">Build stage handoff chain — all tracked in #team-build</div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="tri">
+          <tr><th>Stage</th><th>Owner</th><th>When done → tag</th></tr>
+          <tr><td>Skeletal store build</td><td>Neil + Allyzza</td><td>April → AI content + store copy</td></tr>
+          <tr><td>AI content + store copy</td><td>April + Paul</td><td>Sam + Marinel → email flows + socials</td></tr>
+          <tr><td>Email flows</td><td>Sam</td><td>Wait for socials, then tag Shiela → QC</td></tr>
+          <tr><td>Social media setup</td><td>Marinel</td><td>Wait for email, then tag Shiela → QC</td></tr>
+          <tr><td>QC</td><td>Shiela</td><td>Tag Abe — ready for launch call booking</td></tr>
+        </table>
+      </div>
+      <div class="card" style="margin-top:10px;background:rgba(245,197,24,.05);border-color:rgba(245,197,24,.2)">
+        <h3 style="color:var(--warn);margin-bottom:6px">Your job in the handoff chain</h3>
+        <p style="font-size:13px;color:var(--m2);line-height:1.6">Monitor #team-build List daily. If a stage is marked "done" and 24 hours pass with no tag to the next person — you chase it and tag them yourself. You are the one keeping it moving.</p>
+      </div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div class="tab" id="tab-pipeline">
+      <div class="card" style="background:rgba(124,111,255,.05);border-color:rgba(124,111,255,.2);margin-bottom:18px">
+        <h3 style="color:var(--a2)">Goal for every client</h3>
+        <p style="margin-top:4px">Onboard → FC Builder (product + branding) → store build → ads live → 2 profitable days → Jimmy → off the plate.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--muted)">Stages 2 and 3 (product + branding) are done by you in the FC Builder. Move the client's Slack channel between sections as you go. Everything after that you coordinate through the Feeds tab and team channels.</p>
+      </div>
+      <div id="pipe-steps"></div>
+    </div>
+
+    <!-- RULES -->
+    <div class="tab" id="tab-rules">
+      <div class="rule-block warn"><h4>🕔 5pm Austin sync (Mon-Sat)</h4><p style="font-size:13px;color:var(--m2);line-height:1.6;margin-top:4px">Have all flagged client updates, drafts, and anything needing a leadership decision prepped before 4:45pm. Austin calls it. You act immediately after.</p></div>
+      <div class="rule-block danger"><h4>🚨 Escalation rules</h4><ul id="r-esc"></ul></div>
+      <div class="lbl">Escalation clients — check this before replying to anyone</div>
+      <div class="card" id="esc-clients" style="padding:0;overflow:hidden"></div>
+      <div class="rule-block warn"><h4>⚠️ Messaging rules</h4><ul id="r-msg"></ul></div>
+      <div class="rule-block info"><h4>📋 Brief rules</h4><ul id="r-brief"></ul></div>
+      <div class="lbl">Good vs bad</div>
+      <div class="ex-grid">
+        <div class="card" style="border-color:rgba(61,220,132,.25);background:rgba(61,220,132,.04)"><h3 style="color:var(--good);margin-bottom:8px">✓ Do this</h3><p style="font-style:italic;color:#ccc">"Hey Simonne - here's where things are at. New ads and the updated product page are ready, launching early next week. I'll confirm the exact day tomorrow."</p></div>
+        <div class="card" style="border-color:rgba(255,77,77,.25);background:rgba(255,77,77,.04)"><h3 style="color:var(--fire);margin-bottom:8px">✗ Not this</h3><p style="font-style:italic;color:var(--muted)">"Hi Simonne, I hope this message finds you well. I sincerely apologise for the delay -- I completely understand your frustration..."</p></div>
+      </div>
+    </div>
+
+    <!-- LINKS -->
+    <div class="tab" id="tab-links">
+      <div class="lbl">Tool logins</div>
+      <div id="logins-list"></div>
+      <div class="lbl">Quick links</div>
+      <div id="links-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ════ STATE ════
+const now = new Date();
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let vaName = '';
+let chatHistory = [];
+
+// ════ AUTH ════
+function doLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-err');
+  if (!name) { document.getElementById('login-name').focus(); return; }
+  if (pass !== C.password) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  vaName = name;
+  localStorage.setItem('fc_va', name);
+  const prevName = localStorage.getItem('fc_va_prev');
+  const obDone = localStorage.getItem('fc_ob_done_' + name);
+  localStorage.setItem('fc_va_prev', name);
+  document.getElementById('login-screen').classList.add('hidden');
+  if (!obDone) { startOnboarding(); } else { openHub(); }
+}
+
+function doLogout() {
+  localStorage.removeItem('fc_va');
+  location.reload();
+}
+
+// Auto-login if returning same VA
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('fc_va');
+  if (saved) {
+    vaName = saved;
+    const obDone = localStorage.getItem('fc_ob_done_' + saved);
+    document.getElementById('login-screen').classList.add('hidden');
+    if (!obDone) { startOnboarding(); } else { openHub(); }
+  }
+});
+
+// ════ ONBOARDING ════
+let obStep = 0;
+function startOnboarding() {
+  document.getElementById('ob-screen').classList.remove('hidden');
+  renderObStep(0);
+}
+
+function renderObStep(step) {
+  obStep = step;
+  const steps = C.onboarding;
+  const total = steps.length;
+  const s = steps[step];
+
+  // Dots
+  const dots = document.getElementById('ob-dots');
+  dots.innerHTML = '';
+  steps.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'ob-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+    dots.appendChild(d);
+  });
+
+  // Content
+  const wrap = document.getElementById('ob-content');
+  let html = `<div class="ob-icon">${s.icon}</div><h1 style="font-size:22px;font-weight:700;margin-bottom:10px;line-height:1.3">${s.title}</h1><p class="sub">${s.body}</p>`;
+
+  if (s.type === 'steps') {
+    html += '<div class="ob-step-list">' + s.steps.map((st,i) => `<div class="ob-step-item"><div class="ob-step-num">${i+1}</div><span>${st}</span></div>`).join('') + '</div>';
+  }
+
+  if (s.type === 'tools') {
+    html += `<div class="ob-tools" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="ob-tool"><div class="t-icon">💬</div><h3>Slack</h3><p>All client channels. Sweep every morning, manage every client interaction here. Also where you move clients between pipeline sections.</p></div>
+      <div class="ob-tool"><div class="t-icon">🏗️</div><h3>FC Builder</h3><p>Your main working tool. You do product selection and branding here for every client. The builder generates the review link and message template — you send it to the client, then move their Slack channel to the right section.</p></div>
+      <div class="ob-tool"><div class="t-icon">🌐</div><h3>This hub</h3><p>Daily checklist, team board, pipeline reference, and Chat. Use it to draft messages, check rules, and track where everything is.</p></div>
+    </div>`;
+  }
+
+  if (s.type === 'rules') {
+    html += `<div class="ob-rules">
+      <div class="ob-rule"><div class="r-icon">⚠️</div><div class="r-text"><strong>Some clients are flagged — check the list first</strong>Before replying to any client, check the escalation list in the Rules tab. Flagged clients need Austin's sign-off before anything goes out. The list is updated by Abe — always treat it as current.</div></div>
+      <div class="ob-rule"><div class="r-icon">🕔</div><div class="r-text"><strong>5pm AEST sync every Mon-Sat</strong>This is where leadership decisions get made. Have updates, drafts, and anything needing a call prepped before 4:45pm. You act immediately after Austin gives direction.</div></div>
+      <div class="ob-rule"><div class="r-icon">🚨</div><div class="r-text"><strong>Refund or legal — WhatsApp Abe directly</strong>Don't wait for the sync. Don't draft a reply. Flag it to Abe the moment you see it.</div></div>
+    </div>
+    <div class="ob-acknowledge" onclick="document.getElementById('ob-ack').checked=!document.getElementById('ob-ack').checked">
+      <input type="checkbox" id="ob-ack">
+      <label>I understand — <strong>I will check the escalation list before replying to any client, and flag refunds/legal to Abe immediately.</strong></label>
+    </div>`;
+  }
+
+  if (s.type === 'ready') {
+    html += `<div class="ob-rules" style="margin-top:16px">
+      <div class="ob-rule"><div class="r-icon">1️⃣</div><div class="r-text"><strong>Open the Today tab</strong>Work through the morning checklist step by step.</div></div>
+      <div class="ob-rule"><div class="r-icon">2️⃣</div><div class="r-text"><strong>Use the Chat tab for everything you write</strong>Drafts, briefs, summaries — copy the output, send to Abe before acting.</div></div>
+      <div class="ob-rule"><div class="r-icon">3️⃣</div><div class="r-text"><strong>Hit 🚨 Flag Abe if you're unsure</strong>A quick question is always better than guessing wrong.</div></div>
+    </div>`;
+  }
+
+  // Buttons
+  const isLast = step === total - 1;
+  const isRules = s.type === 'rules';
+
+  if (isLast) {
+    html += `<button class="primary-btn" style="margin-top:20px" onclick="finishOnboarding()">Open the hub →</button>`;
+  } else if (isRules) {
+    html += `<button class="primary-btn" style="margin-top:20px" id="ob-next-btn" onclick="obNext()">I understand →</button>`;
+  } else {
+    html += `<button class="primary-btn" style="margin-top:20px" onclick="obNext()">Next →</button>`;
+    if (step > 0) html += `<button class="sec-btn" onclick="renderObStep(${step-1})">← Back</button>`;
+  }
+
+  wrap.innerHTML = html;
+}
+
+function obNext() {
+  if (C.onboarding[obStep].type === 'rules' && !document.getElementById('ob-ack')?.checked) {
+    document.getElementById('ob-ack').closest('.ob-acknowledge').style.borderColor = 'var(--fire)';
+    return;
+  }
+  renderObStep(obStep + 1);
+}
+
+function finishOnboarding() {
+  localStorage.setItem('fc_ob_done_' + vaName, '1');
+  document.getElementById('ob-screen').classList.add('hidden');
+  openHub();
+}
+
+// ════ HUB ════
+function openHub() {
+  document.getElementById('hub').style.display = 'block';
+  document.getElementById('va-name-badge').textContent = vaName;
+  document.getElementById('date-pill').textContent = DAYS[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS[now.getMonth()];
+  if (C.trainingMode) document.getElementById('training-badge').style.display = 'block';
+  if (!C.chatEndpoint) document.getElementById('setup-notice').style.display = 'block';
+  if (C.abePhone) document.getElementById('flag-btn').href = 'https://wa.me/' + C.abePhone + '?text=' + encodeURIComponent('🚨 FLAG — ' + vaName + '\n[client / situation]\n[what you need from Abe]');
+
+  renderChecklist();
+  renderShortcuts();
+  renderTeam();
+  renderFeeds();
+  renderPipeline();
+  renderRules();
+  renderLogins();
+  renderLinks();
+}
+
+// ════ TABS ════
+function showTab(id, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ════ CHECKLIST ════
+const CL_KEY = () => 'fc_cl_' + vaName + '_' + now.toDateString();
+function renderChecklist() {
+  const saved = JSON.parse(localStorage.getItem(CL_KEY()) || '{}');
+  const wrap = document.getElementById('cl-list'); wrap.innerHTML = '';
+  C.morningSteps.forEach(s => {
+    const done = !!saved[s.id];
+    const d = document.createElement('div');
+    d.className = 'cl-item' + (done ? ' done' : ''); d.dataset.id = s.id;
+    d.innerHTML = `<div class="chk"><svg class="chkmark" width="11" height="8" viewBox="0 0 11 8" fill="none"><path d="M1 4L4 7L10 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div style="flex:1"><div class="cl-title">${s.title}</div><div class="cl-sub">${s.sub}</div>${s.link?`<a class="cl-link" href="${s.link.url}" target="_blank">${s.link.label} ↗</a>`:''}</div>`;
+    d.addEventListener('click', e => { if(e.target.tagName==='A')return; saved[s.id]=!saved[s.id]; localStorage.setItem(CL_KEY(),JSON.stringify(saved)); renderChecklist(); });
+    wrap.appendChild(d);
+  });
+  const done = Object.values(saved).filter(Boolean).length, total = C.morningSteps.length;
+  document.getElementById('cl-prog').textContent = done + '/' + total;
+  document.getElementById('prog-fill').style.width = (done/total*100) + '%';
+}
+function resetCl() { localStorage.removeItem(CL_KEY()); renderChecklist(); }
+
+// ════ CHAT ════
+function renderShortcuts() {
+  const wrap = document.getElementById('shortcuts'); wrap.innerHTML = '';
+  C.shortcuts.forEach(s => {
+    const b = document.createElement('button'); b.className = 'sc-btn'; b.textContent = s.label;
+    b.onclick = () => { const inp = document.getElementById('chat-input'); inp.value = s.prompt; autosize(inp); inp.focus(); };
+    wrap.appendChild(b);
+  });
+}
+function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} }
+function autosize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+
+async function sendMsg() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  if (!C.chatEndpoint) { window.open(C.claudeProject,'_blank'); return; }
+  inp.value=''; autosize(inp);
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('empty-state')?.remove();
+  addMsg(text,'user');
+  const thinking = addMsg('','bot thinking');
+  try {
+    const res = await fetch(C.chatEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,history:chatHistory})});
+    const data = await res.json();
+    const reply = data.reply || data.error || 'No response.';
+    chatHistory.push({role:'user',content:text},{role:'assistant',content:reply});
+    if(chatHistory.length>20) chatHistory=chatHistory.slice(-20);
+    thinking.className='msg bot';
+    thinking.innerHTML=esc(reply).replace(/\n/g,'<br>')+buildActions(reply);
+  } catch(e) {
+    thinking.className='msg bot';
+    thinking.innerHTML='Connection error. <a href="'+C.claudeProject+'" target="_blank" style="color:var(--a2)">Open Claude instead →</a>';
+  }
+  document.getElementById('send-btn').disabled=false;
+}
+
+function addMsg(text,cls) {
+  const w=document.getElementById('chat-msgs');
+  const d=document.createElement('div'); d.className='msg '+cls;
+  if(text) d.innerHTML=esc(text).replace(/\n/g,'<br>');
+  w.appendChild(d); w.scrollTop=w.scrollHeight; return d;
+}
+function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function buildActions(reply) {
+  let h='<div class="msg-actions"><button class="msg-btn" onclick="copyText('+JSON.stringify(reply)+',this)">Copy draft</button>';
+  if(C.trainingMode&&C.abePhone&&C.callmebotKey) h+='<button class="msg-btn approve" onclick="sendApproval(this,'+JSON.stringify(reply)+')">Send to Abe for approval</button>';
+  return h+'</div>';
+}
+async function sendApproval(btn,reply) {
+  const msg='🤖 FC HUB DRAFT ('+vaName+')\n\n'+reply.substring(0,1400)+'\n\nReply YES to approve or reply with changes.';
+  try{ await fetch('https://api.callmebot.com/whatsapp.php?phone='+C.abePhone+'&text='+encodeURIComponent(msg)+'&apikey='+C.callmebotKey,{mode:'no-cors'}); btn.className='msg-btn sent'; btn.textContent='✓ Sent to Abe'; }
+  catch(e){ btn.textContent='Failed — check CallMeBot'; }
+}
+
+// ════ TEAM ════
+const TEAM_KEY = 'fc_team_v3';
+function getTeamData(){ return JSON.parse(localStorage.getItem(TEAM_KEY)||'{}'); }
+function saveTeamData(d){ localStorage.setItem(TEAM_KEY,JSON.stringify(d)); }
+function renderTeam(){
+  const data=getTeamData(); const grid=document.getElementById('team-grid'); grid.innerHTML='';
+  C.team.forEach(m=>{
+    const tasks=data[m.id]||[];
+    const hasBlocked=tasks.some(t=>t.s==='blocked');
+    const hasActive=tasks.some(t=>t.s==='active');
+    const dotCls=hasBlocked?'blocked':hasActive?'active':'idle';
+    const d=document.createElement('div'); d.className='tc';
+    const taskHTML=tasks.length?tasks.map((t,i)=>`<div class="tc-task ${t.s==='done'?'done-task':''}">
+      <div class="tdot ${t.s}" onclick="cycleTask('${m.id}',${i})" title="Click to update status"></div>
+      <span style="flex:1">${esc(t.text)}</span>
+      <button onclick="delTask('${m.id}',${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0 2px;line-height:1">×</button>
+    </div>`).join(''):`<div class="tc-empty">No active tasks</div>`;
+    d.innerHTML=`<div class="tc-head"><div class="tc-info"><h4>${m.name}</h4><span>${m.role}</span></div><div class="sdot ${dotCls}"></div></div>
+      <div class="tc-tasks">${taskHTML}</div>
+      <div class="tc-add"><input id="ti-${m.id}" placeholder="Add task..." onkeydown="if(event.key==='Enter')addTask('${m.id}')"><button class="tc-add-btn" onclick="addTask('${m.id}')">+</button></div>`;
+    grid.appendChild(d);
+  });
+}
+function addTask(id){ const inp=document.getElementById('ti-'+id); const text=inp.value.trim(); if(!text)return; const data=getTeamData(); if(!data[id])data[id]=[]; data[id].unshift({text,s:'active'}); saveTeamData(data); inp.value=''; renderTeam(); }
+function cycleTask(id,i){ const data=getTeamData(); const order=['active','blocked','done']; const cur=data[id][i].s; data[id][i].s=order[(order.indexOf(cur)+1)%order.length]; saveTeamData(data); renderTeam(); }
+function delTask(id,i){ const data=getTeamData(); data[id].splice(i,1); saveTeamData(data); renderTeam(); }
+function copyTeam(){
+  const data=getTeamData(); let out='TEAM STATUS — '+now.toDateString()+'\n\n';
+  C.team.forEach(m=>{ const tasks=(data[m.id]||[]).filter(t=>t.s!=='done'); if(tasks.length){ out+=m.name+':\n'; tasks.forEach(t=>out+=(t.s==='blocked'?'🔴 BLOCKED: ':'- ')+t.text+'\n'); out+='\n'; } });
+  copyText(out,document.querySelector('.team-copy-btn'));
+}
+
+// ════ PIPELINE ════
+function renderPipeline(){
+  const wrap=document.getElementById('pipe-steps');
+  C.pipeline.forEach((p,i)=>{ const last=i===C.pipeline.length-1; const d=document.createElement('div'); d.className='pipe';
+    d.innerHTML=`<div class="pipe-left"><div class="pipe-num">${i+1}</div>${!last?'<div class="pipe-line"></div>':''}</div>
+      <div class="pipe-body"><h4>${p.stage}</h4><p>${p.what}</p><div class="pipe-owner">Owner: ${p.owner}</div>${p.note?`<div class="pipe-note">📌 ${p.note}</div>`:''}</div>`;
+    wrap.appendChild(d);
+  });
+}
+
+// ════ RULES ════
+function renderRules(){
+  [['escalation','r-esc'],['messaging','r-msg'],['briefs','r-brief']].forEach(([key,id])=>{
+    const ul=document.getElementById(id);
+    C.rules[key].forEach(r=>{ const li=document.createElement('li'); li.textContent=r; ul.appendChild(li); });
+  });
+  // Escalation clients list
+  const ec=document.getElementById('esc-clients');
+  if(C.escalationClients&&C.escalationClients.length){
+    C.escalationClients.forEach(c=>{
+      const d=document.createElement('div');
+      d.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:11px 15px;border-bottom:1px solid var(--border);font-size:13px;color:var(--m2);line-height:1.5';
+      d.innerHTML='<span style="color:var(--fire);flex-shrink:0;margin-top:1px">⛔</span><span>'+esc(c)+'</span>';
+      ec.appendChild(d);
+    });
+    ec.lastChild.style.borderBottom='none';
+  } else {
+    ec.innerHTML='<div style="padding:12px 15px;font-size:13px;color:var(--muted)">No escalation clients flagged.</div>';
+  }
+}
+
+// ════ FEEDS ════
+function renderFeeds(){
+  if(!C.feeds) return;
+  const wrap=document.getElementById('feeds-list');
+  C.feeds.forEach(f=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:var(--s1);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden';
+    d.innerHTML=`<a href="${f.url}" target="_blank" style="display:flex;align-items:center;gap:11px;padding:13px 15px;text-decoration:none;color:var(--text);border-bottom:1px solid var(--border)">
+      <span style="font-size:20px;flex-shrink:0">${f.icon}</span>
+      <div style="flex:1"><strong style="font-size:13px;font-weight:600">${f.label}</strong><div style="font-size:11px;color:var(--muted);margin-top:1px">${f.sub}</div></div>
+      <span style="color:var(--muted);font-size:13px">↗</span>
+    </a>
+    <div style="padding:10px 15px"><div style="font-size:12px;color:var(--m2);line-height:1.6">${f.note}</div>${f.format?`<pre style="font-size:11px;color:var(--muted);margin-top:8px;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;white-space:pre-wrap;font-family:monospace;line-height:1.6">${f.format}</pre>`:''}
+    </div>`;
+    wrap.appendChild(d);
+  });
+}
+
+// ════ LINKS ════
+function renderLogins(){
+  const wrap=document.getElementById('logins-list');
+  if(!C.logins||!C.logins.length){ wrap.innerHTML='<p style="font-size:13px;color:var(--muted)">No logins configured yet.</p>'; return; }
+  C.logins.forEach(l=>{
+    const card=document.createElement('div'); card.className='login-card';
+    const hasUser=l.user&&l.user.trim(); const hasPass=l.pass&&l.pass.trim();
+    card.innerHTML=`
+      <div class="login-header"><span>${l.icon}</span><span>${l.label}</span>
+        <a href="${l.url||'#'}" target="_blank" style="margin-left:auto;font-size:11px;color:var(--a2);text-decoration:none">Open ↗</a>
+      </div>
+      <div class="login-row">
+        <div class="login-label">Email</div>
+        <div class="login-val ${hasUser?'':'empty'}">${hasUser?l.user:'not set — ask Abe'}</div>
+        ${hasUser?`<button class="msg-btn" onclick="copyText('${l.user}',this)">Copy</button>`:''}
+      </div>
+      <div class="login-row">
+        <div class="login-label">Password</div>
+        <div class="login-val ${hasPass?'':'empty'}" id="lp-${l.label.replace(/\s/g,'')}">${hasPass?'••••••••••':'not set — ask Abe'}</div>
+        ${hasPass?`<button class="msg-btn" onclick="togglePass('${l.label.replace(/\s/g,'')}','${l.pass}',this)">${hasPass?'Show':''}</button><button class="msg-btn" onclick="copyText('${l.pass}',this)">Copy</button>`:''}
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
+
+function togglePass(id,val,btn){
+  const el=document.getElementById('lp-'+id);
+  if(el.textContent.includes('•')){ el.textContent=val; btn.textContent='Hide'; }
+  else { el.textContent='••••••••••'; btn.textContent='Show'; }
+}
+
+function renderLinks(){
+  const wrap=document.getElementById('links-list');
+  C.links.forEach(l=>{ const a=document.createElement('a'); a.href=l.url; a.target='_blank'; a.className='link-item';
+    a.innerHTML=`<span class="link-icon">${l.icon}</span><div class="link-body"><strong>${l.label}</strong><span>${l.sub}</span></div><span style="color:var(--muted)">↗</span>`;
+    wrap.appendChild(a);
+  });
+}
+
+// ════ UTILS ════
+function copyText(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{ const o=btn.textContent; btn.textContent='Copied!'; setTimeout(()=>btn.textContent=o,1500); });
+}
+</script>
+</body>
+</html>
