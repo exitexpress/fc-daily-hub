@@ -296,8 +296,8 @@ const C = {
   // ── DAILY STEPS ──────────────────────────────────────────
   morningSteps: [
     { id:'m1', title:'Sweep all client channels', sub:'Every builtforyou- and brandbuild- channel. Read everything. Triage as Fire / Urgent / Secondary. Flag anything that needs Abe before you draft a reply.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
-    { id:'m2', title:'Check approvals — fire build triggers', sub:'Product Review / Brand Review sections: any client replied with approval? Go into Builder → advance stage → move channel → fire every trigger for that stage (see Pipeline tab). New onboard? Verify Sheila\'s checklist is in progress.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
-    { id:'m3', title:'Check team channels — build progress + live performance', sub:'#team-build Canvas: any track at "done" with no handoff? Chase it. Sheila hit 50% wordings? Tag Marinel. AI content 100%? Tag Sam. #team-live Canvas: Louie\'s batch results — Cat 4 flags, below BER, rebrief needed. #team-brandbuilds-eod: hours submitted?', link:{ label:'Open team-build', url:'https://freedomclub-clients.slack.com/archives/C0BK8964HMW' } },
+    { id:'m2', title:'Check approvals — fire build triggers', sub:'Product Review / Brand Review sections: any client replied with approval? Go into Builder → advance stage → move channel → fire every trigger for that stage (see Pipeline tab). New onboard? Verify Shiela\'s checklist is in progress.', link:{ label:'Open Slack', url:'https://freedomclub-clients.slack.com' } },
+    { id:'m3', title:'Check team channels — build progress + live performance', sub:'#team-build Canvas: any track at "done" with no handoff? Chase it. Shiela hit 50% wordings? Tag Marinel. AI content 100%? Tag Sam. #team-live Canvas: Louie\'s batch results — Cat 4 flags, below BER, rebrief needed. #team-brandbuilds-eod: hours submitted?', link:{ label:'Open team-build', url:'https://freedomclub-clients.slack.com/archives/C0BK8964HMW' } },
     { id:'m4', title:'Work the FC Builder — advance setup clients', sub:'Log in. For each client in setup: move one step forward. Product done → send builder template → move to Product Review → fire all 4 build triggers. Brand done → send template → move to Brand Review → remind skeletal to apply branding. Use Chat → "Kick off build" shortcut to draft all team messages at once.', link:{ label:'Open FC Builder', url:'https://admin.freedomclub.com' } },
     { id:'m5', title:'Draft + send morning summary to Abe', sub:'Chat tab → Morning summary shortcut → paste sweep notes → get clean 8-bullet WhatsApp message → copy → send to Abe. Nothing goes to a client without his approval. By 4:45pm: all flagged items + drafts ready for the Austin sync.', link:null },
   ],
@@ -307,7 +307,7 @@ const C = {
     { label:'Draft client message',   prompt:'Draft a reply for [Client Name] in [channel name].\n\nWhat they said: "[paste their message]"\nPipeline stage: [stage]\nContext: [any relevant history]\n\nTone: direct, warm, no filler. Keep it short.' },
     { label:'Builder help',           prompt:'I\'m in the FC Builder on the [step name] stage for client [Name].\n\nSituation: [describe what I\'m looking at or stuck on]\n\nWhat should I do here?' },
     { label:'Write ad brief',         prompt:'Write 3 video ad scripts for [Brand] — [Client Name].\n\nGet this from the #team-live Canvas before filling in:\nBatch: [X]\nControl creative: [CX — describe the angle]\nLast ROAS: [X.XX] | BER: [X.XX] | Total spend: $[X]\nBest hook rate: [X%] on [CX]\nWhat worked: [hooks/angles that got engagement or ATCs]\nWhat failed: [angles with low hook rate or zero ATCs]\n\nProduct: [what it does, who it helps]\nShopify store: [URL]\nTarget customer: [who buys this]\nFocus for this batch: [buying intent hooks / iterate control angle / new UGC angle]\n\nRules:\n- Ad 1 mirrors the control creative (same angle, tighter execution)\n- Video only — no static\n- Hook in first 3 seconds\n- Lead with the problem or result — no vague lifestyle openers\n- Under 45 seconds\n- End with clear CTA' },
-    { label:'Kick off build',         prompt:'Client [Name] ([Brand]) just approved their [product / branding].\n\nDraft these Slack messages:\n\n1. To Neil / Eliza / Kelvin (#team-build): start skeletal store layout + reviews. Store progress → 50%.\n2. To Sheila: start product naming + wordings for [Brand].\n3. To April + Paul (AI Content): they can start now. Product details: [paste info]\n4. [Brand approval only]: To skeletal — apply the approved branding to the store now.\n\nKeep each message short — who, what, client name.' },
+    { label:'Kick off build',         prompt:'Client [Name] ([Brand]) just approved their [product / branding].\n\nDraft these Slack messages:\n\n1. To Neil / Allyzza / Kelvin (#team-build): start skeletal store layout + reviews. Store progress → 50%.\n2. To Shiela: start product naming + wordings for [Brand].\n3. To April + Paul (AI Content): they can start now. Product details: [paste info]\n4. [Brand approval only]: To skeletal — apply the approved branding to the store now.\n\nKeep each message short — who, what, client name.' },
     { label:'QC store feedback',      prompt:'I need to send store QC feedback for [Client Name / Brand].\n\nAbe\'s feedback:\n[paste exactly what Abe said]\n\nDraft a Slack message for their build channel ([channel name]) listing what needs fixing — specific page, section, what to change. Number each item. Be precise.' },
     { label:'Launch prep message',    prompt:'Draft a message to [Client Name] in [channel name].\n\nContext: store and ads are approved. We need to book a launch call with Abe.\n\nInclude:\n- We\'re ready to go\n- Book a time here: [paste Amy\'s calendar link from Links tab]\n- Friendly and direct — no fluff.' },
     { label:'Morning summary',        prompt:'Format my sweep notes as a WhatsApp message for Abe — max 8 bullets, direct. No filler.\n\nMy notes:\n[paste notes here]' },
@@ -318,9 +318,9 @@ const C = {
   // ── TEAM ─────────────────────────────────────────────────
   team: [
     { id:'jimmy',   name:'Jimmy',              role:'Client comms · onboarding · handover' },
-    { id:'sheila',  name:'Sheila',             role:'Product naming · wordings · store coordination' },
+    { id:'shiela',  name:'Shiela',             role:'Product naming · wordings · store coordination' },
     { id:'neil',    name:'Neil',               role:'Skeletal store build' },
-    { id:'eliza',   name:'Eliza',              role:'Skeletal store build' },
+    { id:'allyzza', name:'Allyzza',            role:'Skeletal store build' },
     { id:'kelvin',  name:'Kelvin',             role:'Skeletal store build' },
     { id:'paul',    name:'Paul',               role:'AI images · store content' },
     { id:'april',   name:'April',              role:'AI content · store copy' },
@@ -336,26 +336,26 @@ const C = {
   pipeline: [
     {
       stage:'1. Onboarding',
-      owner:'Jimmy + Sheila (you monitor)',
-      what:'Jimmy runs the onboarding call. Sheila sends the post-onboarding checklist in Slack. Your job: verify the client completes it and follow up if they go quiet. You do not run this stage — you watch it.',
+      owner:'Jimmy + Shiela (you monitor)',
+      what:'Jimmy runs the onboarding call. Shiela sends the post-onboarding checklist in Slack. Your job: verify the client completes it and follow up if they go quiet. You do not run this stage — you watch it.',
       note:'Flag to Jimmy if client is slow or silent on checklist. Nothing moves forward until checklist is done.'
     },
     {
       stage:'2. Product Selection',
       owner:'You (FC Builder)',
-      what:'Log into FC Builder. Select the right products for this client. Builder generates review link + Slack template — send it to the client in their channel. Move their channel to "Product Review" section. Follow up at 5 days if no response.\n\n🔴 WHEN CLIENT APPROVES — fire all 4 triggers immediately:\n1. Tag skeletal (Neil / Eliza / Kelvin) to start store layout + reviews → store progress to 50%\n2. Tag Sheila to start product naming + wordings\n3. Tag AI Content team (April + Paul) — they start now\n4. Open Chat tab → Write ad brief → kick off Batch 1 brief',
+      what:'Log into FC Builder. Select the right products for this client. Builder generates review link + Slack template — send it to the client in their channel. Move their channel to "Product Review" section. Follow up at 5 days if no response.\n\n🔴 WHEN CLIENT APPROVES — fire all 4 triggers immediately:\n1. Tag skeletal (Neil / Allyzza / Kelvin) to start store layout + reviews → store progress to 50%\n2. Tag Shiela to start product naming + wordings\n3. Tag AI Content team (April + Paul) — they start now\n4. Open Chat tab → Write ad brief → kick off Batch 1 brief',
       note:'Never send a custom message — use the builder template only. Log the approval deadline.'
     },
     {
       stage:'3. Branding',
       owner:'You (FC Builder)',
-      what:'Client approves product → back into Builder → complete branding steps. Builder generates branded review link + Slack template → send to client → move channel to "Brand Review." Follow up at 3 days.\n\n🔴 WHEN CLIENT APPROVES BRANDING:\n→ Remind skeletal (Neil / Eliza / Kelvin) to apply branding to the store now.',
+      what:'Client approves product → back into Builder → complete branding steps. Builder generates branded review link + Slack template → send to client → move channel to "Brand Review." Follow up at 3 days.\n\n🔴 WHEN CLIENT APPROVES BRANDING:\n→ Remind skeletal (Neil / Allyzza / Kelvin) to apply branding to the store now.',
       note:'Post-approval checklist: the builder sends a separate client checklist after each approval. Make sure they complete it before moving on.'
     },
     {
       stage:'4. Store Build (parallel tracks)',
-      owner:'Neil/Eliza/Kelvin · Sheila · April/Paul · Marinel · Sam',
-      what:'Four tracks run simultaneously — your job is watching triggers and firing each one on time. Add client to the #team-build Canvas.\n\n📍 AT PRODUCT APPROVAL: Skeletal starts layout + reviews (→ 50%). Sheila starts naming + wordings. AI Content starts.\n📍 AT BRAND APPROVAL: Skeletal applies branding.\n📍 WORDINGS HIT 50% (Sheila): Tag Marinel for Socials — confirm social access first.\n📍 AI CONTENT AT 100%: Tag Sam to push emails to 100%.\n\nAD BRIEFS run in parallel from product approval. Chase editors if brief has no update after 48hrs.',
+      owner:'Neil/Eliza/Kelvin · Shiela · April/Paul · Marinel · Sam',
+      what:'Four tracks run simultaneously — your job is watching triggers and firing each one on time. Add client to the #team-build Canvas.\n\n📍 AT PRODUCT APPROVAL: Skeletal starts layout + reviews (→ 50%). Shiela starts naming + wordings. AI Content starts.\n📍 AT BRAND APPROVAL: Skeletal applies branding.\n📍 WORDINGS HIT 50% (Shiela): Tag Marinel for Socials — confirm social access first.\n📍 AI CONTENT AT 100%: Tag Sam to push emails to 100%.\n\nAD BRIEFS run in parallel from product approval. Chase editors if brief has no update after 48hrs.',
       note:'Nothing sits. Track at "done" for 24hrs with no handoff = you chase it. Check #team-build every morning.'
     },
     {
@@ -436,8 +436,8 @@ const C = {
     {
       icon:'🔨', label:'#team-build', sub:'Store build — parallel tracks, VA fires triggers',
       url:'https://freedomclub-clients.slack.com/archives/C0BK8964HMW',
-      note:'Four parallel tracks — fire each trigger at the right moment:\n\n📍 Product approval → Tag skeletal (Neil/Eliza/Kelvin) for store layout (→ 50%). Tag Sheila for naming + wordings. Tag AI Content (April/Paul) to start.\n📍 Brand approval → Remind skeletal to apply branding.\n📍 Wordings at 50% (Sheila) → Tag Marinel for Socials. Confirm social access first.\n📍 AI Content at 100% → Tag Sam to push emails.\n\nUse Chat → "Kick off build" to draft all messages at once. Check canvas every morning — anything at done with no handoff? Chase it.',
-      format:'Canvas columns: Client | Skeletal | AI Content | Wordings (Sheila) | Socials | Emails | QC ready',
+      note:'Four parallel tracks — fire each trigger at the right moment:\n\n📍 Product approval → Tag skeletal (Neil/Eliza/Kelvin) for store layout (→ 50%). Tag Shiela for naming + wordings. Tag AI Content (April/Paul) to start.\n📍 Brand approval → Remind skeletal to apply branding.\n📍 Wordings at 50% (Shiela) → Tag Marinel for Socials. Confirm social access first.\n📍 AI Content at 100% → Tag Sam to push emails.\n\nUse Chat → "Kick off build" to draft all messages at once. Check canvas every morning — anything at done with no handoff? Chase it.',
+      format:'Canvas columns: Client | Skeletal | AI Content | Wordings (Shiela) | Socials | Emails | QC ready',
     },
     {
       icon:'📊', label:'#team-live', sub:'Live clients — ROAS canvas, rebrief cycle',
